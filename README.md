@@ -9,3 +9,5 @@ Share.it is a reddit clone created as a graduation project.
 - express
 - mikroORM
 - Apollo
+
+## ig: @davidprokopec
