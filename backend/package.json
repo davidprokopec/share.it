@@ -9,7 +9,8 @@
     "start2": "ts-node src/index.ts",
     "watch": "tsc -w",
     "dev": "nodemon -L dist/index.js",
-    "dev2": "nodemon --exec ts-node src/index.ts"
+    "dev2": "nodemon --exec ts-node src/index.ts",
+    "create:migration": "npx mikro-orm migration:create"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "@mikro-orm/migrations": "^4.4.3",
     "@mikro-orm/postgresql": "^4.4.3",
     "apollo-server-express": "^3.4.0",
+    "argon2": "^0.28.2",
     "graphql": "^15.6.1",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",

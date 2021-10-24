@@ -1,3 +1,4 @@
+import { User } from "./entities/User";
 import { __prod__ } from "./constants";
 import { Post } from "./entities/Post";
 import { MikroORM } from "@mikro-orm/core";
@@ -9,7 +10,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/,
     disableForeignKeys: false,
   },
-  entities: [Post],
+  entities: [Post, User],
   dbName: "shareit",
   user: "shareit",
   password: "shareit",
