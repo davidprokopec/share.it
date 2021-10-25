@@ -8,7 +8,7 @@ export type MyContext = {
   res: Response;
 };
 declare module "express-session" {
-  export interface SessionData {
+  interface Session {
     userId: number;
   }
 }
