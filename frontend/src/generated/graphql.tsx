@@ -182,16 +182,10 @@ ${RegularUserFragmentDoc}`;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
-    errors {
-      ...RegularError
-    }
-    user {
-      ...RegularUser
-    }
+    ...RegularUserReponse
   }
 }
-    ${RegularErrorFragmentDoc}
-${RegularUserFragmentDoc}`;
+    ${RegularUserReponseFragmentDoc}`;
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
@@ -219,16 +213,10 @@ export function useLogoutMutation() {
 export const RegisterDocument = gql`
     mutation Register($options: UsernamePasswordInput!) {
   register(options: $options) {
-    errors {
-      ...RegularError
-    }
-    user {
-      ...RegularUser
-    }
+    ...RegularUserReponse
   }
 }
-    ${RegularErrorFragmentDoc}
-${RegularUserFragmentDoc}`;
+    ${RegularUserReponseFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
