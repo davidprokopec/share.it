@@ -2,7 +2,15 @@ import { validateRegister } from "./../utils/validateRegister";
 import { COOKIE_NAME, FORGOT_PASSWORD_PREFIX } from "./../constants";
 import { User } from "./../entities/User";
 import { MyContext } from "./../types";
-import { Arg, Ctx, Field, Mutation, ObjectType, Query } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from "type-graphql";
 import argon2 from "argon2";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { sendEmail } from "../utils/sendEmail";
@@ -26,6 +34,7 @@ class UserResponse {
   user?: User;
 }
 
+@Resolver()
 export class UserResolver {
   @Mutation(() => UserResponse)
   async changePassword(
