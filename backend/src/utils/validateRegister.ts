@@ -10,6 +10,19 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     ];
   }
 
+  if (options.password !== options.passwordVerify) {
+    return [
+      {
+        field: "password",
+        message: " ",
+      },
+      {
+        field: "passwordVerify",
+        message: "Passwords don't match.",
+      },
+    ];
+  }
+
   if (options.username.length <= 2) {
     return [
       {

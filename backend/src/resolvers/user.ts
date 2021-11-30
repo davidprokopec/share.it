@@ -163,14 +163,25 @@ export class UserResolver {
       // || err.detail.includes("already exists")) {
       // duplicate username error
       if (err.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "Username has already been taken",
-            },
-          ],
-        };
+        if (err.detail.includes("Key (email)")) {
+          return {
+            errors: [
+              {
+                field: "email",
+                message: "Email is already in use",
+              },
+            ],
+          };
+        } else {
+          return {
+            errors: [
+              {
+                field: "username",
+                message: "Username has already been taken",
+              },
+            ],
+          };
+        }
       }
       console.log("message: ", err.message.detail);
     }
