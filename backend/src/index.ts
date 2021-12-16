@@ -30,6 +30,8 @@ const main = async () => {
   });
   await conn.runMigrations();
 
+  // Post.delete({});
+
   const app = express();
 
   const RedisStore = connectRedis(session);
