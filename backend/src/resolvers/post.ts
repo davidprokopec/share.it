@@ -1,4 +1,3 @@
-import { Upvote } from "./../entities/Upvote";
 import { Post } from "./../entities/Post";
 import {
   Query,
