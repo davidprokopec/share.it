@@ -15,6 +15,7 @@ import {
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import Router from "next/router";
+import { FieldsOnCorrectTypeRule } from "graphql";
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -29,12 +30,12 @@ const errorExchange: Exchange =
     );
   };
 
+// PAGINATION
 const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
     const { parentKey: entityKey, fieldName } = info;
 
     const allFields = cache.inspectFields(entityKey);
-    console.log("allFields: ", allFields);
     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
     const size = fieldInfos.length;
     if (size === 0) {
@@ -139,6 +140,19 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          createPost: (_result, args, cache, info) => {
+            const allFields = cache.inspectFields("Query");
+            const fieldInfos = allFields.filter(
+              (info) => info.fieldName === "posts"
+            );
+            fieldInfos.forEach((fi) => {
+              cache.invalidate("Query", "posts", fi.arguments);
+            });
+            cache.invalidate("Query", "posts", {
+              limit: 15,
+            });
+          },
+
           logout: (_result, args, cache, info) => {
             betterUpdateQuery<LogoutMutation, MeQuery>(
               cache,
