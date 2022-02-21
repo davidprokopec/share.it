@@ -44,7 +44,7 @@ export class UserResolver {
     if (req.session.userId === user.id) {
       return user.email;
     }
-    // cizi email - ukazat email
+    // cizi email - neukazat email
     return "";
   }
 
@@ -59,7 +59,7 @@ export class UserResolver {
         errors: [
           {
             field: "newPassword",
-            message: "Password must be longer than 4 characters",
+            message: "Heslo musí mit alespoň 4 znaky",
           },
         ],
       };
@@ -72,7 +72,7 @@ export class UserResolver {
         errors: [
           {
             field: "token",
-            message: "Token has expired",
+            message: "Vypršela platnost tokenu",
           },
         ],
       };
@@ -86,7 +86,7 @@ export class UserResolver {
         errors: [
           {
             field: "token",
-            message: "User no longer exists",
+            message: "Uživatel již neexistuje",
           },
         ],
       };
@@ -180,7 +180,7 @@ export class UserResolver {
             errors: [
               {
                 field: "email",
-                message: "Email is already in use",
+                message: "Již existuje účet s tímto e-mailem",
               },
             ],
           };
@@ -189,7 +189,7 @@ export class UserResolver {
             errors: [
               {
                 field: "username",
-                message: "Username has already been taken",
+                message: "Jméno již existuje",
               },
             ],
           };
@@ -221,7 +221,7 @@ export class UserResolver {
         errors: [
           {
             field: "usernameOrEmail",
-            message: "That username doesn't exist",
+            message: "Toto jméno nebo e-mail neexistuje",
           },
         ],
       };
@@ -232,7 +232,7 @@ export class UserResolver {
         errors: [
           {
             field: "password",
-            message: "Incorrect password",
+            message: "Špatné heslo",
           },
         ],
       };
