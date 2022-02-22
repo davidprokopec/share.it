@@ -31,10 +31,13 @@ export const VoteSection: React.FC<VoteSectionProps> = ({ post }) => {
       <IconButton
         onClick={async () => {
           setLoadingState("downvote-loading");
-          await vote({
-            postId: post.id,
-            value: -1,
-          });
+          const voteResult: number | any = (
+            await vote({
+              postId: post.id,
+              value: -1,
+            })
+          ).data?.vote.points;
+          post.points = voteResult;
           setLoadingState("not-loading");
         }}
         isLoading={loadingState === "downvote-loading"}

@@ -30,7 +30,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   updatePost?: Maybe<Post>;
-  vote: Scalars['Boolean'];
+  vote: Post;
 };
 
 
@@ -198,7 +198,7 @@ export type VoteMutationVariables = Exact<{
 }>;
 
 
-export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
+export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, textSnippet: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -321,7 +321,15 @@ export function useRegisterMutation() {
 };
 export const VoteDocument = gql`
     mutation Vote($value: Int!, $postId: Int!) {
-  vote(value: $value, postId: $postId)
+  vote(value: $value, postId: $postId) {
+    id
+    createdAt
+    updatedAt
+    title
+    points
+    creatorId
+    textSnippet
+  }
 }
     `;
 

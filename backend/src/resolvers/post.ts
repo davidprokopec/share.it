@@ -40,7 +40,7 @@ export class PostResolver {
     return root.text.slice(0, 50) + "...";
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Post)
   @UseMiddleware(isAuth)
   async vote(
     @Arg("postId", () => Int) postId: number,
@@ -94,8 +94,7 @@ export class PostResolver {
       });
     }
 
-    return true;
-    ``;
+    return await Post.findOne(postId);
   }
 
   @Query(() => PaginatedPosts)
@@ -130,21 +129,6 @@ export class PostResolver {
     `,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(realLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
 
     return {
       posts: posts.slice(0, realLimit),
