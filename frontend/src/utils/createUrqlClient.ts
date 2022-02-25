@@ -1,5 +1,5 @@
 import { isServer } from "./isServer";
-import { VoteMutationVariables } from "./../generated/graphql";
+import { PostQuery, VoteMutationVariables } from "./../generated/graphql";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import {
   dedupExchange,
@@ -76,7 +76,7 @@ const cursorPagination = (): Resolver => {
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   if (isServer()) {
-    cookie = ctx.req.headers.cookie;
+    cookie = ctx?.req.headers.cookie;
   }
 
   return {
@@ -141,6 +141,17 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
 
             logout: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "posts"
+              );
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "posts", fi.arguments);
+              });
+              cache.invalidate("Query", "posts", {
+                limit: 15,
+              });
+
               betterUpdateQuery<LogoutMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -150,6 +161,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
 
             login: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "posts"
+              );
               betterUpdateQuery<LoginMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -158,6 +173,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   if (result.login.errors) {
                     return query;
                   } else {
+                    fieldInfos.forEach((fi) => {
+                      cache.invalidate("Query", "posts", fi.arguments);
+                    });
+                    cache.invalidate("Query", "posts", {
+                      limit: 15,
+                    });
                     return {
                       me: result.login.user,
                     };
