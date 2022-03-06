@@ -1,10 +1,8 @@
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
   Heading,
-  IconButton,
   Link,
   Stack,
   Text,
@@ -12,13 +10,10 @@ import {
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useState } from "react";
+import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { VoteSection } from "../components/VoteSection";
-import {
-  useDeletePostMutation,
-  useMeQuery,
-  usePostsQuery,
-} from "../generated/graphql";
+import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 
@@ -27,16 +22,17 @@ const Index = () => {
     limit: 15,
     cursor: null as null | string,
   });
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables,
   });
 
-  const [me] = useMeQuery({ pause: isServer() });
-
-  const [, deletePost] = useDeletePostMutation();
-
   if (!fetching && !data) {
-    return <div>query failed</div>;
+    return (
+      <div>
+        <div>query failed</div>
+        <div>{error?.message}</div>
+      </div>
+    );
   }
 
   return (
@@ -61,18 +57,12 @@ const Index = () => {
                     <Text mt={4} flex={1}>
                       {p.textSnippet}
                     </Text>
-                    {me.data?.me?.id == p.creatorId ||
-                    me.data?.me?.role === "admin" ? (
-                      <IconButton
-                        ml="auto"
-                        icon={<DeleteIcon />}
-                        colorScheme="red"
-                        aria-label="delete post"
-                        onClick={() => {
-                          deletePost({ id: p.id });
-                        }}
+                    <Box ml="auto">
+                      <EditDeletePostButtons
+                        id={p.id}
+                        creatorId={p.creator.id}
                       />
-                    ) : null}
+                    </Box>
                   </Flex>
                 </Box>
               </Flex>
