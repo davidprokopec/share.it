@@ -24,18 +24,20 @@ const main = async () => {
     type: "postgres",
     url: __prod__ ? process.env.DB_HOST : process.env.DATABASE_URL,
     logging: true,
-    // synchronize: true,
+    synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Upvote],
   });
-  //  await conn.runMigrations();
+  await conn.runMigrations();
 
   // Post.delete({});
 
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis(__prod__ ? process.env.REDIS_HOST : process.env.REDIS_URL);
+  const redis = new Redis(
+    __prod__ ? process.env.REDIS_HOST : process.env.REDIS_URL
+  );
 
   app.set("trust proxy", 1);
 

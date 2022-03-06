@@ -17,6 +17,7 @@ import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 import { getConnection } from "typeorm";
 import { Upvote } from "../entities/Upvote";
+import { User } from "../entities/User";
 
 @InputType()
 class PostInput {
@@ -126,7 +127,8 @@ export class PostResolver {
       'username', u.username,
       'email', u.email,
       'createdAt', u."createdAt",
-      'updatedAt', u."updatedAt"
+      'updatedAt', u."updatedAt",
+      'role', u.role
     ) creator,
     ${
       req.session.userId
@@ -182,10 +184,22 @@ export class PostResolver {
     return post;
   }
 
-  @UseMiddleware(isAuth)
   @Mutation(() => Boolean)
-  async deletePost(@Arg("id") id: number): Promise<boolean> {
-    await Post.delete(id);
+  @UseMiddleware(isAuth)
+  async deletePost(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean> {
+    const post = await Post.findOne(id);
+    const user = await User.findOne(req.session.userId);
+    if (!post) {
+      return false;
+    }
+    if (user?.role !== "admin" && post.creatorId !== req.session.userId) {
+      throw new Error("not authorized");
+    }
+
+    await Post.delete({ id });
     return true;
   }
 }

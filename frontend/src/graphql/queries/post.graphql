@@ -10,6 +10,7 @@ query Post($id: Int!) {
     creator {
       id
       username
+      role
     }
   }
 }
