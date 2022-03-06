@@ -1,0 +1,36 @@
+version: "2"
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=shareit
+      - POSTGRES_USER=shareit
+      - POSTGRES_DB=shareit3
+  backend:
+    image: davidprokopec/share.it.backend:latest
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+  frontend:
+    image: davidprokopec/share.it.frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=backend:4000/graphql
+    depends_on:
+      - backend
+
+networks:
+  default:
+    name: main

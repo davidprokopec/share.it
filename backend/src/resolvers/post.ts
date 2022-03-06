@@ -106,8 +106,6 @@ export class PostResolver {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
 
-    console.log("session user", req.session.userId);
-
     const replacements: any[] = [realLimitPlusOne];
 
     if (req.session.userId) {

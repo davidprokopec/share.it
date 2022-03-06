@@ -1,4 +1,5 @@
 import { COOKIE_NAME, __prod__ } from "./constants";
+import "dotenv-safe/config";
 import { UserResolver } from "./resolvers/user";
 import "reflect-metadata";
 import express from "express";
@@ -21,26 +22,26 @@ const main = async () => {
   // sendEmail("bob@bob.com", "hello");
   const conn = await createConnection({
     type: "postgres",
-    database: "shareit2",
-    username: "shareit",
-    password: "shareit",
+    url: __prod__ ? process.env.DB_HOST : process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Upvote],
   });
-  await conn.runMigrations();
+  //  await conn.runMigrations();
 
   // Post.delete({});
 
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(__prod__ ? process.env.REDIS_HOST : process.env.REDIS_URL);
+
+  app.set("trust proxy", 1);
 
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
@@ -57,9 +58,10 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax",
         secure: __prod__,
+        domain: __prod__ ? ".davidrokopec.me" : undefined,
       },
       saveUninitialized: false,
-      secret: "djwajdawjgjwawaj",
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
@@ -72,15 +74,19 @@ const main = async () => {
     ],
     schema: await buildSchema({
       resolvers: [HelloResolver, PostResolver, UserResolver],
+      validate: false,
     }),
     context: ({ req, res }) => ({ req, res, redis }),
   });
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({ app, cors: false });
+  apolloServer.applyMiddleware({
+    app,
+    cors: { origin: process.env.CORS_ORIGIN, credentials: true },
+  });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT), () => {
     console.log("server running on localhost:4000");
   });
 };

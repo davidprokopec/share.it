@@ -1,6 +1,6 @@
-import { isServer } from "./isServer";
-import { PostQuery, VoteMutationVariables } from "./../generated/graphql";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import gql from "graphql-tag";
+import Router from "next/router";
 import {
   dedupExchange,
   Exchange,
@@ -15,9 +15,9 @@ import {
   MeQuery,
   RegisterMutation,
 } from "../generated/graphql";
+import { VoteMutationVariables } from "./../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
-import Router from "next/router";
-import gql from "graphql-tag";
+import { isServer } from "./isServer";
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -80,7 +80,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
 
   return {
-    url: "http://localhost:4000/graphql",
+    url: process.env.NEXT_PUBLIC_API_URL as string,
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie ? { cookie } : undefined,
