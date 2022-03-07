@@ -1,9 +1,11 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   Heading,
   Link,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -12,6 +14,7 @@ import NextLink from "next/link";
 import { useState } from "react";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
+import { Loading } from "../components/Loading";
 import { VoteSection } from "../components/VoteSection";
 import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
@@ -38,12 +41,20 @@ const Index = () => {
   return (
     <Layout>
       {!data && fetching ? (
-        <div>loading...</div>
+        <Loading />
       ) : (
         <Stack spacing={8}>
           {data!.posts.posts.map((p) =>
             !p ? null : (
-              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+              <Flex
+                key={p.id}
+                p={5}
+                shadow="md"
+                borderWidth="1px"
+                overflow="hidden"
+                bg="#DEE7E7"
+                rounded="md"
+              >
                 <VoteSection post={p} />
                 <Box flex={1}>
                   <NextLink href="/post/[id]" as={`/post/${p.id}`}>
@@ -51,11 +62,10 @@ const Index = () => {
                       <Heading fontSize="xl">{p.title}</Heading>
                     </Link>
                   </NextLink>
-
                   <Text>posted by {p.creator.username} </Text>
                   <Flex align="center">
-                    <Text mt={4} flex={1}>
-                      {p.textSnippet}
+                    <Text noOfLines={[1, 2]} mt={4} mr={4}>
+                      {p.text}
                     </Text>
                     <Box ml="auto">
                       <EditDeletePostButtons

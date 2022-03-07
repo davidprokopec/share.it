@@ -19,6 +19,7 @@ import path from "path";
 import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpvoteLoader } from "./utils/createUpvoteLoader";
+import { Comment } from "./entities/Comment";
 
 const main = async () => {
   // sendEmail("bob@bob.com", "hello");
@@ -28,7 +29,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Post, User, Upvote],
+    entities: [Post, User, Upvote, Comment],
   });
   await conn.runMigrations();
 
