@@ -38,12 +38,14 @@ export const Register: React.FC<registerProps> = ({}) => {
           {({ isSubmitting }) => (
             <Form>
               <InputField
+                bg="white"
                 name="username"
                 placeholder="username"
                 label="Username"
               ></InputField>
               <Box mt={4}>
                 <InputField
+                  bg="white"
                   name="email"
                   placeholder="email"
                   label="Email"
@@ -51,6 +53,7 @@ export const Register: React.FC<registerProps> = ({}) => {
               </Box>
               <Box mt={4}>
                 <InputField
+                  bg="white"
                   name="password"
                   placeholder="password"
                   label="Password"
@@ -59,6 +62,7 @@ export const Register: React.FC<registerProps> = ({}) => {
               </Box>
               <Box>
                 <InputField
+                  bg="white"
                   name="passwordVerify"
                   placeholder="same password as above"
                   label="Verify password"

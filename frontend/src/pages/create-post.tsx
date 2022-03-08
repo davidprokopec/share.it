@@ -27,6 +27,7 @@ const CreatePost: React.FC<{}> = ({}) => {
         {({ isSubmitting }) => (
           <Form>
             <InputField
+              bg="white"
               name="title"
               placeholder="title"
               label="Title"
@@ -34,6 +35,7 @@ const CreatePost: React.FC<{}> = ({}) => {
             <Box mt={4}>
               <InputField
                 textarea
+                bg="white"
                 name="text"
                 placeholder="text..."
                 label="Body"

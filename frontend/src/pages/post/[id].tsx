@@ -1,18 +1,25 @@
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
+import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
-import React from "react";
+import { CommentCard } from "../../components/CommentCard";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
 import { VoteSection } from "../../components/VoteSection";
-import { usePostQuery } from "../../generated/graphql";
+import { useCommentsQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
+import { useGetIntId } from "../../utils/usetGetIntId";
 
 const Post = ({}) => {
   const [{ data, fetching }] = useGetPostFromUrl();
+
+  const intId = useGetIntId();
+
+  const [{ data: commentsData, fetching: commentsFetching }] = useCommentsQuery(
+    { variables: { postId: intId } }
+  );
 
   if (fetching) {
     return (
@@ -55,9 +62,7 @@ const Post = ({}) => {
             </Heading>
             <Text color="gray.600" mb={4}>
               Zveřejněno v{" "}
-              {moment(new Date(parseInt(data?.post?.createdAt))).format(
-                "DD. mm. yyyy v hh:MM"
-              )}
+              {moment(new Date(parseInt(data?.post?.createdAt))).format("LL")}
             </Text>
             <Box mb={4}>{data?.post?.text}</Box>
             <Box ml="auto" mr={4}>
@@ -68,6 +73,10 @@ const Post = ({}) => {
             </Box>
           </Flex>
         </Flex>
+        <div>komentáře</div>
+        {commentsData!.comments.comments.map((c) =>
+          !c ? null : <CommentCard comment={c} />
+        )}
       </Stack>
     </Layout>
   );

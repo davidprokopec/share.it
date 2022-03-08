@@ -20,6 +20,7 @@ import { Upvote } from "./entities/Upvote";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpvoteLoader } from "./utils/createUpvoteLoader";
 import { Comment } from "./entities/Comment";
+import { CommentResolver } from "./resolvers/comment";
 
 const main = async () => {
   // sendEmail("bob@bob.com", "hello");
@@ -78,7 +79,7 @@ const main = async () => {
       }),
     ],
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, PostResolver, UserResolver, CommentResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

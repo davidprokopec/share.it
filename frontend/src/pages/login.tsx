@@ -36,12 +36,14 @@ export const Login: React.FC<{}> = ({}) => {
           {({ isSubmitting }) => (
             <Form>
               <InputField
+                bg="white"
                 name="usernameOrEmail"
                 placeholder="username or email"
                 label="Username or Email"
               ></InputField>
               <Box mt={4}>
                 <InputField
+                  bg="white"
                   name="password"
                   placeholder="password"
                   label="Password"

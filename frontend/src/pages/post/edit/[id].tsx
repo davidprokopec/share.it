@@ -50,6 +50,7 @@ export const EditPost: React.FC = ({}) => {
         {({ isSubmitting }) => (
           <Form>
             <InputField
+              bg="white"
               name="title"
               placeholder="title"
               label="Title"
@@ -57,6 +58,7 @@ export const EditPost: React.FC = ({}) => {
             <Box mt={4}>
               <InputField
                 textarea
+                bg="white"
                 name="text"
                 placeholder="text..."
                 label="Body"
