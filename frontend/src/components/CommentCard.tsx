@@ -9,10 +9,10 @@ import {
 import moment from "moment";
 import "moment/locale/cs";
 import React from "react";
-import { CommentSnippetFragment } from "../generated/graphql";
+import { RegularCommentFragment } from "../generated/graphql";
 
 interface CommentProps {
-  comment: CommentSnippetFragment;
+  comment: RegularCommentFragment;
 }
 
 export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
