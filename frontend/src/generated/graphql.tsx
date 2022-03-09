@@ -263,6 +263,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string } | null | undefined } };
 
+export type RemoveCommentMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type RemoveCommentMutation = { __typename?: 'Mutation', removeComment: boolean };
+
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int'];
   title: Scalars['String'];
@@ -453,6 +460,15 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const RemoveCommentDocument = gql`
+    mutation RemoveComment($id: Int!) {
+  removeComment(id: $id)
+}
+    `;
+
+export function useRemoveCommentMutation() {
+  return Urql.useMutation<RemoveCommentMutation, RemoveCommentMutationVariables>(RemoveCommentDocument);
 };
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: Int!, $title: String!, $text: String!) {

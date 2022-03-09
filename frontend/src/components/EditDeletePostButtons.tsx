@@ -3,6 +3,7 @@ import { Box, Flex, IconButton, Link } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useDeletePostMutation, useMeQuery } from "../generated/graphql";
+import { useRouter } from "next/router";
 
 interface EditDeletePostButtonsProps {
   id: number;
@@ -13,6 +14,8 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   id,
   creatorId,
 }) => {
+  const router = useRouter();
+
   const [, deletePost] = useDeletePostMutation();
   const [{ data: meData }] = useMeQuery();
 
@@ -36,6 +39,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
         _hover={{ transform: "scale(1.2) rotate(-5deg)", bg: "red.500" }}
         onClick={() => {
           deletePost({ id });
+          router.push("/");
         }}
       />
     </Flex>

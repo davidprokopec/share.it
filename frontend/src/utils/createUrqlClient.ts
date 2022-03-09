@@ -16,6 +16,7 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
+  RemoveCommentMutationVariables,
 } from "../generated/graphql";
 import { VoteMutationVariables } from "./../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -126,6 +127,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            removeComment: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Comment",
+                id: (args as RemoveCommentMutationVariables).id,
+              });
+            },
             addComment: (_result, args, cache, info) => {
               invalidateAllComments(cache, args as AddCommentMutationVariables);
             },
