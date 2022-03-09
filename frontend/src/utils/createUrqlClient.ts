@@ -9,6 +9,7 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  AddCommentMutationVariables,
   DeletePostMutationVariables,
   LoginMutation,
   LogoutMutation,
@@ -74,6 +75,20 @@ const cursorPagination = (): Resolver => {
   };
 };
 
+function invalidateAllComments(
+  cache: Cache,
+  args: AddCommentMutationVariables
+) {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "comments");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "comments", fi.arguments);
+  });
+  cache.invalidate("Query", "comments", {
+    postId: args.input.postId,
+  });
+}
+
 function invalidateAllPosts(cache: Cache) {
   const allFields = cache.inspectFields("Query");
   const fieldInfos = allFields.filter((info) => info.fieldName === "posts");
@@ -111,6 +126,9 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            addComment: (_result, args, cache, info) => {
+              invalidateAllComments(cache, args as AddCommentMutationVariables);
+            },
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",

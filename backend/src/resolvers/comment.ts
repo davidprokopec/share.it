@@ -14,6 +14,7 @@ import {
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
 import { User } from "../entities/User";
+import { FieldError } from "../entities/FieldError";
 
 @InputType()
 class CommentInput {
@@ -21,6 +22,14 @@ class CommentInput {
   text: string;
   @Field()
   postId: number;
+}
+
+@ObjectType()
+class AddCommentResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+  @Field(() => Comment, { nullable: true })
+  comment?: Comment;
 }
 
 @ObjectType()
@@ -46,19 +55,38 @@ export class CommentResolver {
       where: { postId: postId },
       relations: ["user"],
     });
-    return { comments };
+    return { comments: comments.reverse() };
   }
 
-  @Mutation(() => Comment)
+  @Mutation(() => AddCommentResponse)
   @UseMiddleware(isAuth)
   async addComment(
     @Arg("input") input: CommentInput,
     @Ctx() { req }: MyContext
-  ): Promise<Comment> {
-    return Comment.create({
+  ): Promise<AddCommentResponse> {
+    let comment;
+
+    if (input.text.trim().length === 0) {
+      return {
+        errors: [
+          {
+            field: "comment",
+            message: "Zadejte text!",
+          },
+        ],
+      };
+    }
+
+    const result = await Comment.create({
       ...input,
       userId: req.session.userId,
     }).save();
+
+    comment = await Comment.findOne(result.id, {
+      relations: ["user"],
+    });
+
+    return { comment };
   }
 
   @Mutation(() => Boolean)

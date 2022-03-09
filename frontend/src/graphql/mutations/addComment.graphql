@@ -1,0 +1,10 @@
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    errors {
+      ...RegularError
+    }
+    comment {
+      ...RegularComment
+    }
+  }
+}

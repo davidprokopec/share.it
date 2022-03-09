@@ -1,18 +1,35 @@
-import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import moment from "moment";
 import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
 import { CommentCard } from "../../components/CommentCard";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
+import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
 import { VoteSection } from "../../components/VoteSection";
-import { useCommentsQuery } from "../../generated/graphql";
+import {
+  useAddCommentMutation,
+  useCommentsQuery,
+} from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { toErrorMap } from "../../utils/toErrorMap";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { useGetIntId } from "../../utils/usetGetIntId";
+import { useRouter } from "next/router";
 
 const Post = ({}) => {
+  const router = useRouter();
+
   const [{ data, fetching }] = useGetPostFromUrl();
 
   const intId = useGetIntId();
@@ -20,6 +37,8 @@ const Post = ({}) => {
   const [{ data: commentsData, fetching: commentsFetching }] = useCommentsQuery(
     { variables: { postId: intId } }
   );
+
+  const [, addComment] = useAddCommentMutation();
 
   if (fetching) {
     return (
@@ -64,7 +83,9 @@ const Post = ({}) => {
               Zveřejněno v{" "}
               {moment(new Date(parseInt(data?.post?.createdAt))).format("LL")}
             </Text>
-            <Box mb={4}>{data?.post?.text}</Box>
+            <Box mb={4} overflow="hidden">
+              {data?.post?.text}
+            </Box>
             <Box ml="auto" mr={4}>
               <EditDeletePostButtons
                 id={data.post.id}
@@ -73,10 +94,53 @@ const Post = ({}) => {
             </Box>
           </Flex>
         </Flex>
-        <div>komentáře</div>
-        {commentsData!.comments.comments.map((c) =>
-          !c ? null : <CommentCard comment={c} />
-        )}
+        <Flex flexDirection="column">
+          <Flex flexDirection="column" mx={10} mt={15} mb={-4}>
+            <Text mb={4}>Přidejte komentář</Text>
+            <Formik
+              initialValues={{ comment: "" }}
+              onSubmit={async (values, { setErrors }) => {
+                const response = await addComment({
+                  input: { postId: data!.post!.id, text: values.comment },
+                });
+                if (response.data?.addComment.errors) {
+                  setErrors(toErrorMap(response.data.addComment.errors));
+                } else if (response.data?.addComment.comment) {
+                  values.comment = "";
+                  return;
+                }
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Flex flexDirection="column" alignItems="center">
+                    <InputField textarea name="comment" label="" bg="white" />
+                    <Button
+                      mt={2}
+                      type="submit"
+                      isLoading={isSubmitting}
+                      colorScheme="teal"
+                      maxW="20vw"
+                      alignSelf="flex-end"
+                      fontSize="sm"
+                      minW="150px"
+                    >
+                      Přidat komentář
+                    </Button>
+                  </Flex>
+                </Form>
+              )}
+            </Formik>
+          </Flex>
+          <Text textAlign="left">Komentáře</Text>
+          {!commentsData && commentsFetching ? (
+            <Loading />
+          ) : (
+            commentsData!.comments!.comments.map((c) =>
+              !c ? null : <CommentCard comment={c} />
+            )
+          )}
+        </Flex>
       </Stack>
     </Layout>
   );

@@ -1,4 +1,4 @@
-fragment CommentSnippet on Comment {
+fragment RegularComment on Comment {
   id
   postId
   text

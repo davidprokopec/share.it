@@ -14,6 +14,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type AddCommentResponse = {
+  __typename?: 'AddCommentResponse';
+  comment?: Maybe<Comment>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type Comment = {
   __typename?: 'Comment';
   createdAt: Scalars['String'];
@@ -44,7 +50,7 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addComment: Comment;
+  addComment: AddCommentResponse;
   changePassword: UserResponse;
   createPost: Post;
   deletePost: Scalars['Boolean'];
@@ -140,7 +146,7 @@ export type PostInput = {
 export type Query = {
   __typename?: 'Query';
   comment: Comment;
-  comments: Comments;
+  comments?: Maybe<Comments>;
   hello: Scalars['String'];
   me?: Maybe<User>;
   post?: Maybe<Post>;
@@ -191,15 +197,22 @@ export type UsernamePasswordInput = {
   username: Scalars['String'];
 };
 
-export type CommentSnippetFragment = { __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } };
+export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } };
 
-export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, textSnippet: string, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } };
+export type RegularCommentFragment = { __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, role: string };
 
 export type RegularUserReponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string } | null | undefined };
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput;
+}>;
+
+
+export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'AddCommentResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, comment?: { __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } } | null | undefined } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -272,7 +285,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'Comments', comments: Array<{ __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } }> } };
+export type CommentsQuery = { __typename?: 'Query', comments?: { __typename?: 'Comments', comments: Array<{ __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } }> } | null | undefined };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -292,20 +305,8 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, textSnippet: string, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
 
-export const CommentSnippetFragmentDoc = gql`
-    fragment CommentSnippet on Comment {
-  id
-  postId
-  text
-  createdAt
-  user {
-    id
-    username
-  }
-}
-    `;
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
@@ -314,13 +315,24 @@ export const PostSnippetFragmentDoc = gql`
   title
   points
   creatorId
-  textSnippet
   text
   voteStatus
   creator {
     id
     username
     role
+  }
+}
+    `;
+export const RegularCommentFragmentDoc = gql`
+    fragment RegularComment on Comment {
+  id
+  postId
+  text
+  createdAt
+  user {
+    id
+    username
   }
 }
     `;
@@ -348,6 +360,23 @@ export const RegularUserReponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AddCommentDocument = gql`
+    mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    errors {
+      ...RegularError
+    }
+    comment {
+      ...RegularComment
+    }
+  }
+}
+    ${RegularErrorFragmentDoc}
+${RegularCommentFragmentDoc}`;
+
+export function useAddCommentMutation() {
+  return Urql.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -452,11 +481,11 @@ export const CommentsDocument = gql`
     query Comments($postId: Int!) {
   comments(postId: $postId) {
     comments {
-      ...CommentSnippet
+      ...RegularComment
     }
   }
 }
-    ${CommentSnippetFragmentDoc}`;
+    ${RegularCommentFragmentDoc}`;
 
 export function useCommentsQuery(options: Omit<Urql.UseQueryArgs<CommentsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CommentsQuery>({ query: CommentsDocument, ...options });
