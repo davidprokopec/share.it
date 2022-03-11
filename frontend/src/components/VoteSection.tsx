@@ -1,5 +1,5 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import { Flex, IconButton } from "@chakra-ui/react";
+import { Flex, IconButton, ResponsiveValue } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
 
@@ -12,6 +12,7 @@ export const VoteSection: React.FC<VoteSectionProps> = ({ post }) => {
     "upvote-loading" | "downvote-loading" | "not-loading"
   >("not-loading");
   const [, vote] = useVoteMutation();
+
   return (
     <Flex direction="column" alignItems="center" justifyContent="center" mr={4}>
       <IconButton

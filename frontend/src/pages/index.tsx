@@ -55,7 +55,7 @@ const Index = () => {
                 bg="#DEE7E7"
                 rounded="md"
               >
-                <VoteSection post={p} />
+                <VoteSection direction="column" post={p} />
                 <Box flex={1}>
                   <NextLink href="/post/[id]" as={`/post/${p.id}`}>
                     <Link>

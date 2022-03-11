@@ -26,23 +26,21 @@ export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
 
   return (
     <Box px={8} py={4} rounded="lg" shadow="lg" bg="#DEE7E7" my={2}>
-      <Flex justifyContent="space-between">
-        <chakra.span
-          fontSize="sm"
-          color={useColorModeValue("gray.600", "gray.400")}
-        >
-          {moment(new Date(parseInt(comment.createdAt))).format("LLLL")}
-        </chakra.span>
-        <Text color="gray.600">{comment.user.username}</Text>
+      <Flex flexDirection="column">
+        <Text fontWeight="bold" fontSize="1.1em" color="gray.600">
+          {comment.user.username}
+        </Text>
       </Flex>
 
-      <Flex mt={2}>
-        <Text noOfLines={50} mt={2} mr={2} color="black">
+      <Flex>
+        <Text noOfLines={50} mr={16} color="black">
           {comment.text}
         </Text>
         {meData?.me?.id !== comment.user.id &&
         meData?.me?.role !== "admin" ? null : (
           <IconButton
+            mt="auto"
+            mb="auto"
             ml="auto"
             icon={<DeleteIcon />}
             aria-label="delete post"
@@ -53,6 +51,9 @@ export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
           />
         )}
       </Flex>
+      <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.400")}>
+        {moment(new Date(parseInt(comment.createdAt))).format("LLLL")}
+      </Text>
     </Box>
   );
 };

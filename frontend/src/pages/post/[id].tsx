@@ -96,7 +96,9 @@ const Post = ({}) => {
         </Flex>
         <Flex flexDirection="column">
           <Flex flexDirection="column" mx={10} mt={15} mb={-4}>
-            <Text mb={4}>Přidejte komentář</Text>
+            <Text fontWeight="semibold" mb={0}>
+              Přidejte komentář
+            </Text>
             <Formik
               initialValues={{ comment: "" }}
               onSubmit={async (values, { setErrors }) => {
@@ -114,7 +116,13 @@ const Post = ({}) => {
               {({ isSubmitting }) => (
                 <Form>
                   <Flex flexDirection="column" alignItems="center">
-                    <InputField textarea name="comment" label="" bg="white" />
+                    <InputField
+                      textarea
+                      name="comment"
+                      label=""
+                      bg="white"
+                      placeholder="Zde napište váš komentář"
+                    />
                     <Button
                       mt={2}
                       type="submit"

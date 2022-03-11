@@ -22,10 +22,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <NextLink href="/login">
-          <Link mr={2}>Login</Link>
+          <Link mr={2} color="white">
+            Login
+          </Link>
         </NextLink>
         <NextLink href="/register">
-          <Link>Register</Link>
+          <Link color="white">Register</Link>
         </NextLink>
       </>
     );
@@ -62,7 +64,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
               color="gray.100"
               transition="0.5s"
               _hover={{
-                color: "black",
+                transform: "scale(1.2)",
                 transition: "0.5s",
                 textDecoration: "none",
               }}
