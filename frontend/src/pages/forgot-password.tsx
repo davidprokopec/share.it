@@ -26,6 +26,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
           {({ isSubmitting }) => (
             <Form>
               <InputField
+                bg="white"
                 name="email"
                 placeholder="email"
                 label="Email"
