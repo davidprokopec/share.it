@@ -1,11 +1,9 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   Heading,
   Link,
-  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -16,9 +14,8 @@ import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { Loading } from "../components/Loading";
 import { VoteSection } from "../components/VoteSection";
-import { useMeQuery, usePostsQuery } from "../generated/graphql";
+import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { isServer } from "../utils/isServer";
 
 const Index = () => {
   const [variables, setVariables] = useState({
