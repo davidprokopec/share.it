@@ -40,23 +40,23 @@ export const Register: React.FC<registerProps> = ({}) => {
               <InputField
                 bg="white"
                 name="username"
-                placeholder="username"
-                label="Username"
+                placeholder="uživatelské jméno"
+                label="Uživatelské jméno"
               ></InputField>
               <Box mt={4}>
                 <InputField
                   bg="white"
                   name="email"
-                  placeholder="email"
-                  label="Email"
+                  placeholder="e-mail"
+                  label="E-mail"
                 ></InputField>
               </Box>
               <Box mt={4}>
                 <InputField
                   bg="white"
                   name="password"
-                  placeholder="password"
-                  label="Password"
+                  placeholder="heslo"
+                  label="Heslo"
                   type="password"
                 ></InputField>
               </Box>
@@ -64,8 +64,8 @@ export const Register: React.FC<registerProps> = ({}) => {
                 <InputField
                   bg="white"
                   name="passwordVerify"
-                  placeholder="same password as above"
-                  label="Verify password"
+                  placeholder="stejné heslo jako výše"
+                  label="Ověření hesla"
                   type="password"
                 ></InputField>
               </Box>
@@ -75,7 +75,7 @@ export const Register: React.FC<registerProps> = ({}) => {
                 isLoading={isSubmitting}
                 colorScheme="teal"
               >
-                Register
+                Registrovat se
               </Button>
             </Form>
           )}

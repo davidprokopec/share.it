@@ -28,8 +28,8 @@ const ForgotPassword: React.FC<{}> = ({}) => {
               <InputField
                 bg="white"
                 name="email"
-                placeholder="email"
-                label="Email"
+                placeholder="e-mail"
+                label="E-mail"
               ></InputField>
               <Button
                 mt={4}
@@ -37,7 +37,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
                 isLoading={isSubmitting}
                 colorScheme="teal"
               >
-                Forgot Password
+                Zapomněl jsem heslo
               </Button>
             </Form>
           )}

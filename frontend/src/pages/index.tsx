@@ -29,7 +29,7 @@ const Index = () => {
   if (!fetching && !data) {
     return (
       <div>
-        <div>query failed</div>
+        <div>query selhala</div>
         <div>{error?.message}</div>
       </div>
     );
@@ -59,7 +59,7 @@ const Index = () => {
                       <Heading fontSize="xl">{p.title}</Heading>
                     </Link>
                   </NextLink>
-                  <Text>posted by {p.creator.username} </Text>
+                  <Text>Zveřejnil {p.creator.username} </Text>
                   <Flex align="center">
                     <Text noOfLines={[1, 2]} mt={4} mr={4}>
                       {p.text}
@@ -90,7 +90,7 @@ const Index = () => {
             m="auto"
             my={8}
           >
-            Load More
+            Načíst Více
           </Button>
         </Flex>
       ) : null}

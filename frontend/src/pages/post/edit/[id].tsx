@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
+import { Loading } from "../../../components/Loading";
 import {
   usePostQuery,
   useUpdatePostMutation,
@@ -23,17 +24,13 @@ export const EditPost: React.FC = ({}) => {
   });
   const [, updatePost] = useUpdatePostMutation();
   if (fetching) {
-    return (
-      <Layout>
-        <div>loading...</div>
-      </Layout>
-    );
+    return <Loading />;
   }
 
   if (!data?.post) {
     return (
       <Layout>
-        <Box>Could not find post</Box>
+        <Box>Nelze najít příspěvek</Box>
       </Layout>
     );
   }
@@ -52,8 +49,8 @@ export const EditPost: React.FC = ({}) => {
             <InputField
               bg="white"
               name="title"
-              placeholder="title"
-              label="Title"
+              placeholder="název"
+              label="Název"
             ></InputField>
             <Box mt={4}>
               <InputField
@@ -61,7 +58,7 @@ export const EditPost: React.FC = ({}) => {
                 bg="white"
                 name="text"
                 placeholder="text..."
-                label="Body"
+                label="Text"
               ></InputField>
             </Box>
             <Button
@@ -70,7 +67,7 @@ export const EditPost: React.FC = ({}) => {
               isLoading={isSubmitting}
               colorScheme="teal"
             >
-              Edit post
+              Upravit příspěvek
             </Button>
           </Form>
         )}

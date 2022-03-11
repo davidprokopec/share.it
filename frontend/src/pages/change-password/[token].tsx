@@ -52,7 +52,7 @@ const ChangePassword: NextPage = () => {
                   {tokenError}
                 </Box>
                 <NextLink href="/forgot-password">
-                  <Link>Click here to get a new one!</Link>
+                  <Link>Klikni zde pro získání nového tokenu!</Link>
                 </NextLink>
               </Flex>
             ) : null}
@@ -62,7 +62,7 @@ const ChangePassword: NextPage = () => {
               isLoading={isSubmitting}
               colorScheme="teal"
             >
-              Change Password
+              Změnit Heslo
             </Button>
           </Form>
         )}

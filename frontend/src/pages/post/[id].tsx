@@ -51,7 +51,7 @@ const Post = ({}) => {
   if (!data?.post) {
     return (
       <Layout>
-        <Box>Cannot find post</Box>
+        <Box>Nelze najít příspěvek</Box>
       </Layout>
     );
   }

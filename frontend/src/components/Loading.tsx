@@ -13,7 +13,7 @@ export const Loading: React.FC<LoadingProps> = ({}) => {
         alignItems="center"
       >
         <Spinner />
-        <div>loading...</div>
+        <div>načítání...</div>
       </Flex>
     </Center>
   );

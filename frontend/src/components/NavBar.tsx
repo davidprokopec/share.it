@@ -22,12 +22,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <NextLink href="/login">
-          <Link mr={2} color="white">
-            Login
+          <Link mr={4} color="white">
+            Přihlásit se
           </Link>
         </NextLink>
         <NextLink href="/register">
-          <Link color="white">Register</Link>
+          <Link color="white">Registrovat se</Link>
         </NextLink>
       </>
     );
@@ -38,7 +38,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       <Flex align="center">
         <NextLink href="create-post">
           <Button as={Link} mr={2}>
-            create post
+            Vytvořit příspěvek
           </Button>
         </NextLink>
         <Box mr={2}>{data.me.username}</Box>
@@ -49,8 +49,9 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           }}
           isLoading={logoutFetching}
           variant="link"
+          color="white"
         >
-          Logout
+          Odhlásit se
         </Button>
       </Flex>
     );

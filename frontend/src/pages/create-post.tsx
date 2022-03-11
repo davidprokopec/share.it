@@ -29,8 +29,8 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField
               bg="white"
               name="title"
-              placeholder="title"
-              label="Title"
+              placeholder="název"
+              label="Název"
             ></InputField>
             <Box mt={4}>
               <InputField
@@ -38,7 +38,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                 bg="white"
                 name="text"
                 placeholder="text..."
-                label="Body"
+                label="Text"
               ></InputField>
             </Box>
             <Button
@@ -47,7 +47,7 @@ const CreatePost: React.FC<{}> = ({}) => {
               isLoading={isSubmitting}
               colorScheme="teal"
             >
-              Create post
+              Vytvořit příspěvek
             </Button>
           </Form>
         )}

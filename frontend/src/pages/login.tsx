@@ -38,21 +38,21 @@ export const Login: React.FC<{}> = ({}) => {
               <InputField
                 bg="white"
                 name="usernameOrEmail"
-                placeholder="username or email"
-                label="Username or Email"
+                placeholder="jméno nebo e-mail"
+                label="Jméno nebo E-mail"
               ></InputField>
               <Box mt={4}>
                 <InputField
                   bg="white"
                   name="password"
-                  placeholder="password"
-                  label="Password"
+                  placeholder="heslo"
+                  label="Heslo"
                   type="password"
                 ></InputField>
               </Box>
               <Flex mt={2}>
                 <NextLink href="/forgot-password">
-                  <Link ml="auto">I forgot my password!</Link>
+                  <Link ml="auto">Zapomněl jsem heslo!</Link>
                 </NextLink>
               </Flex>
               <Button
@@ -61,7 +61,7 @@ export const Login: React.FC<{}> = ({}) => {
                 isLoading={isSubmitting}
                 colorScheme="teal"
               >
-                Login
+                Přihlásit se
               </Button>
             </Form>
           )}
