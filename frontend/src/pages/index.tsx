@@ -90,7 +90,7 @@ const Index = () => {
             m="auto"
             my={8}
           >
-            Načíst Více
+            Načíst více
           </Button>
         </Flex>
       ) : null}
