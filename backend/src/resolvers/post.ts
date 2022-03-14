@@ -18,6 +18,7 @@ import { isAuth } from "../middleware/isAuth";
 import { getConnection } from "typeorm";
 import { Upvote } from "../entities/Upvote";
 import { User } from "../entities/User";
+import { stringify } from "querystring";
 
 @InputType()
 class PostInput {
@@ -218,5 +219,18 @@ export class PostResolver {
 
     await Post.delete({ id });
     return true;
+  }
+
+  @Query(() => [Post])
+  async searchPosts(@Arg("query", () => String) query: string) {
+    return await getConnection().query(
+      `
+      select p.*
+      from post p
+      WHERE p.title ILIKE $1
+      order by p."createdAt" DESC
+      `,
+      [query + "%"]
+    );
   }
 }

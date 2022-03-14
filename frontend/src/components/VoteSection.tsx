@@ -1,5 +1,5 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, ResponsiveValue } from "@chakra-ui/react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
 

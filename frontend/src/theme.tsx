@@ -1,6 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
-import { buildExecutionContext } from "graphql/execution/execute";
 
 const fonts = { mono: `'Menlo', monospace` };
 
@@ -20,6 +19,7 @@ const theme = extendTheme({
   styles: {
     global: () => ({
       body: {
+        minWidth: "min-content",
         bg: "gray.300",
       },
     }),

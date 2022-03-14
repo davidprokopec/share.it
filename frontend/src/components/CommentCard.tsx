@@ -1,7 +1,6 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
-  chakra,
   Flex,
   IconButton,
   Text,
@@ -11,8 +10,8 @@ import moment from "moment";
 import "moment/locale/cs";
 import React from "react";
 import {
-  useMeQuery,
   RegularCommentFragment,
+  useMeQuery,
   useRemoveCommentMutation,
 } from "../generated/graphql";
 

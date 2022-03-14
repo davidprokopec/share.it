@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -20,6 +21,7 @@ export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Index({ fulltext: true })
   @Field()
   @Column()
   title!: string;

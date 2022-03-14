@@ -1,9 +1,11 @@
-import React from "react";
-import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Input, Link } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
-import { useRouter } from "next/router";
+import { InputField } from "./InputField";
 
 interface NavBarProps {}
 
@@ -14,6 +16,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     pause: isServer(),
   });
   let body = null;
+
+  let searchQuery = router.query.searchQuery;
 
   //loading
   if (fetching) {
@@ -58,9 +62,9 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   }
   return (
     <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4}>
-      <Flex flex={1} m="auto" maxW={800} align="center">
+      <Flex flex={1} m="auto" maxW={800} alignItems="center">
         <NextLink href="/">
-          <Link style={{ textDecoration: "none" }}>
+          <Link style={{ textDecoration: "none", marginRight: "auto" }}>
             <Heading
               color="gray.100"
               transition="0.5s"
@@ -74,6 +78,33 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             </Heading>
           </Link>
         </NextLink>
+        <Formik
+          initialValues={{ query: searchQuery }}
+          onSubmit={(values, { setSubmitting }) => {
+            router.push(
+              "/search/[searchQuery]",
+              (`/search/` + values.query) as string
+            );
+            setSubmitting(false);
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Flex flexDirection="row" mr={2} role="group">
+                <Box mr={4}>
+                  <InputField name="query" placeholder="zadejte hledaný text" />
+                </Box>
+                <Button
+                  type="submit"
+                  isLoading={isSubmitting}
+                  fontSize={[12, 15]}
+                >
+                  Hledat
+                </Button>
+              </Flex>
+            </Form>
+          )}
+        </Formik>
         <Box ml={"auto"}>{body}</Box>
       </Flex>
     </Flex>

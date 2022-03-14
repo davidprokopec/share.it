@@ -27,7 +27,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=backend:4000/graphql
+      - NEXT_PUBLIC_API_URL=backend/graphql
     depends_on:
       - backend
 

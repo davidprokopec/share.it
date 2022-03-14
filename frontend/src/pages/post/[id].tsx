@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import "moment/locale/cs";
@@ -25,11 +17,8 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { useGetIntId } from "../../utils/usetGetIntId";
-import { useRouter } from "next/router";
 
 const Post = ({}) => {
-  const router = useRouter();
-
   const [{ data, fetching }] = useGetPostFromUrl();
 
   const intId = useGetIntId();
