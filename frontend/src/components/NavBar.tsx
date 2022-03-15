@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Input, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -45,7 +45,11 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             Vytvořit příspěvek
           </Button>
         </NextLink>
-        <Box mr={2}>{data.me.username}</Box>
+        <Box mr={2}>
+          <NextLink href="/user/[username]" as={`/user/${data.me.username}`}>
+            <Link>{data.me.username}</Link>
+          </NextLink>
+        </Box>
         <Button
           onClick={async () => {
             await logout();

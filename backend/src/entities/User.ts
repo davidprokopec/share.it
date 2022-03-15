@@ -34,6 +34,11 @@ export class User extends BaseEntity {
   @Column({ default: "user" })
   role!: string;
 
+  @Field(() => Boolean)
+  @Column({ default: false })
+  banned!: boolean;
+
+  @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.creator)
   posts: Post[];
 

@@ -1,0 +1,9 @@
+query User($username: String!) {
+  user(username: $username) {
+    ...RegularUser
+    createdAt
+    posts {
+      ...PostSnippet
+    }
+  }
+}

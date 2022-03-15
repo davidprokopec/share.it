@@ -8,10 +8,12 @@ import { Layout } from "../components/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useisAuth } from "../utils/useIsAuth";
+import { useIsBanned } from "../utils/useIsBanned";
 
 const CreatePost: React.FC<{}> = ({}) => {
   const router = useRouter();
   useisAuth();
+  useIsBanned();
   const [, createPost] = useCreatePostMutation();
   return (
     <Layout variant="small">

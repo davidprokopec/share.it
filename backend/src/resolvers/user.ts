@@ -7,11 +7,13 @@ import {
   Ctx,
   Field,
   FieldResolver,
+  Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
   Root,
+  UseMiddleware,
 } from "type-graphql";
 import argon2 from "argon2";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
@@ -19,6 +21,7 @@ import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
 import { getConnection } from "typeorm";
 import { FieldError } from "../entities/FieldError";
+import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()
 class UserResponse {
@@ -231,6 +234,7 @@ export class UserResolver {
     }
 
     req.session.userId = user.id;
+    req.session.userRole = user.role;
 
     return {
       user,
@@ -251,5 +255,46 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Query(() => User)
+  async user(
+    @Arg("username", () => String) username: string
+  ): Promise<User | undefined> {
+    return await User.findOne({ where: { username }, relations: ["posts"] });
+  }
+
+  @Mutation(() => User)
+  @UseMiddleware(isAuth)
+  async banUser(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<User | undefined> {
+    if (req.session.userRole !== "admin") {
+      throw new Error("Nejste admin");
+    }
+
+    let banned = true;
+    const user = await User.findOne(id);
+
+    if (user?.role === "admin") {
+      throw new Error("Nelze zabanovat admina");
+    }
+
+    if (user?.banned) {
+      banned = false;
+    }
+
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(User)
+      .set({ banned })
+      .where("id = :id", {
+        id,
+      })
+      .returning("*")
+      .execute();
+
+    return result.raw[0];
   }
 }

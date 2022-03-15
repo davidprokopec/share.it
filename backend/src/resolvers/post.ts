@@ -71,6 +71,12 @@ export class PostResolver {
     @Arg("value", () => Int) value: number,
     @Ctx() { req }: MyContext
   ) {
+    const user = await User.findOne(req.session.userId);
+
+    if (user?.banned) {
+      throw new Error("zabanovany uzivatel nemuze hlasovat");
+    }
+
     const isUpvote = value !== -1;
     const realValue = isUpvote ? 1 : -1;
     const { userId } = req.session;
@@ -230,7 +236,7 @@ export class PostResolver {
       WHERE p.title ILIKE $1
       order by p."createdAt" DESC
       `,
-      [query + "%"]
+      ["%" + query + "%"]
     );
   }
 }

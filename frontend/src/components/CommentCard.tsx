@@ -3,6 +3,7 @@ import {
   Box,
   Flex,
   IconButton,
+  Link,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -14,6 +15,7 @@ import {
   useMeQuery,
   useRemoveCommentMutation,
 } from "../generated/graphql";
+import NextLink from "next/link";
 
 interface CommentProps {
   comment: RegularCommentFragment;
@@ -26,9 +28,13 @@ export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
   return (
     <Box px={8} py={4} rounded="lg" shadow="lg" bg="#DEE7E7" my={2}>
       <Flex flexDirection="column">
-        <Text fontWeight="bold" fontSize="1.1em" color="gray.600">
-          {comment.user.username}
-        </Text>
+        <NextLink href="/user/[username]" as={`/user/${comment.user.username}`}>
+          <Link>
+            <Text fontWeight="bold" fontSize="1.1em" color="gray.600">
+              {comment.user.username}
+            </Text>
+          </Link>
+        </NextLink>
       </Flex>
 
       <Flex>

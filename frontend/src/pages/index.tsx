@@ -1,19 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Link,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextLink from "next/link";
 import { useState } from "react";
-import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { Loading } from "../components/Loading";
-import { VoteSection } from "../components/VoteSection";
+import { PostCard } from "../components/PostCard";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
@@ -41,40 +31,7 @@ const Index = () => {
         <Loading />
       ) : (
         <Stack spacing={8}>
-          {data!.posts.posts.map((p) =>
-            !p ? null : (
-              <Flex
-                key={p.id}
-                p={5}
-                shadow="md"
-                borderWidth="1px"
-                overflow="hidden"
-                bg="#DEE7E7"
-                rounded="md"
-              >
-                <VoteSection post={p} />
-                <Box flex={1}>
-                  <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-                    <Link>
-                      <Heading fontSize="xl">{p.title}</Heading>
-                    </Link>
-                  </NextLink>
-                  <Text>Zveřejnil {p.creator.username} </Text>
-                  <Flex align="center">
-                    <Text noOfLines={[1, 2]} mt={4} mr={4}>
-                      {p.text}
-                    </Text>
-                    <Box ml="auto">
-                      <EditDeletePostButtons
-                        id={p.id}
-                        creatorId={p.creator.id}
-                      />
-                    </Box>
-                  </Flex>
-                </Box>
-              </Flex>
-            )
-          )}
+          {data!.posts.posts.map((p) => (!p ? null : <PostCard post={p} />))}
         </Stack>
       )}
       {data && data.posts.hasMore ? (

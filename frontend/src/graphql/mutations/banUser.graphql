@@ -1,0 +1,5 @@
+mutation BanUser($id: Int!) {
+  banUser(id: $id) {
+    ...RegularUser
+  }
+}

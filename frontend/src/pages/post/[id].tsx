@@ -12,14 +12,19 @@ import { VoteSection } from "../../components/VoteSection";
 import {
   useAddCommentMutation,
   useCommentsQuery,
+  useMeQuery,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { isServer } from "../../utils/isServer";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { useGetIntId } from "../../utils/usetGetIntId";
 
 const Post = ({}) => {
   const [{ data, fetching }] = useGetPostFromUrl();
+  const [{ data: meData, fetching: meFetching }] = useMeQuery({
+    pause: isServer(),
+  });
 
   const intId = useGetIntId();
 
@@ -84,53 +89,55 @@ const Post = ({}) => {
           </Flex>
         </Flex>
         <Flex flexDirection="column">
-          <Flex flexDirection="column" mx={10} mt={15} mb={-4}>
-            <Text fontWeight="semibold" mb={0}>
-              Přidejte komentář
-            </Text>
-            <Formik
-              initialValues={{ comment: "" }}
-              onSubmit={async (values, { setErrors }) => {
-                const response = await addComment({
-                  input: { postId: data!.post!.id, text: values.comment },
-                });
-                if (response.data?.addComment.errors) {
-                  setErrors(toErrorMap(response.data.addComment.errors));
-                } else if (response.data?.addComment.comment) {
-                  values.comment = "";
-                  return;
-                }
-              }}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  <Flex flexDirection="column" alignItems="center">
-                    <InputField
-                      textarea
-                      name="comment"
-                      label=""
-                      bg="white"
-                      placeholder="Zde napište váš komentář"
-                    />
-                    <Button
-                      mt={2}
-                      type="submit"
-                      isLoading={isSubmitting}
-                      colorScheme="teal"
-                      maxW="20vw"
-                      alignSelf="flex-end"
-                      fontSize="sm"
-                      minW="150px"
-                    >
-                      Přidat komentář
-                    </Button>
-                  </Flex>
-                </Form>
-              )}
-            </Formik>
-          </Flex>
+          {!meData?.me || meData?.me.banned ? null : (
+            <Flex flexDirection="column" mx={10} mt={15} mb={-4}>
+              <Text fontWeight="semibold" mb={0}>
+                Přidejte komentář
+              </Text>
+              <Formik
+                initialValues={{ comment: "" }}
+                onSubmit={async (values, { setErrors }) => {
+                  const response = await addComment({
+                    input: { postId: data!.post!.id, text: values.comment },
+                  });
+                  if (response.data?.addComment.errors) {
+                    setErrors(toErrorMap(response.data.addComment.errors));
+                  } else if (response.data?.addComment.comment) {
+                    values.comment = "";
+                    return;
+                  }
+                }}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <Flex flexDirection="column" alignItems="center" mb={4}>
+                      <InputField
+                        textarea
+                        name="comment"
+                        label=""
+                        bg="white"
+                        placeholder="Zde napište váš komentář"
+                      />
+                      <Button
+                        mt={2}
+                        type="submit"
+                        isLoading={isSubmitting}
+                        colorScheme="teal"
+                        maxW="20vw"
+                        alignSelf="flex-end"
+                        fontSize="sm"
+                        minW="150px"
+                      >
+                        Přidat komentář
+                      </Button>
+                    </Flex>
+                  </Form>
+                )}
+              </Formik>
+            </Flex>
+          )}
           <Text textAlign="left">Komentáře</Text>
-          {!commentsData && commentsFetching ? (
+          {commentsFetching ? (
             <Loading />
           ) : (
             commentsData!.comments!.comments.map((c) =>
