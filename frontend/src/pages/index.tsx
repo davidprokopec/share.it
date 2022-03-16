@@ -31,7 +31,9 @@ const Index = () => {
         <Loading />
       ) : (
         <Stack spacing={8}>
-          {data!.posts.posts.map((p) => (!p ? null : <PostCard post={p} />))}
+          {data!.posts.posts.map((p) =>
+            !p ? null : <PostCard key={p.id} post={p} />
+          )}
         </Stack>
       )}
       {data && data.posts.hasMore ? (

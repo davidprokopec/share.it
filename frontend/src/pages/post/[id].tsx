@@ -141,7 +141,7 @@ const Post = ({}) => {
             <Loading />
           ) : (
             commentsData!.comments!.comments.map((c) =>
-              !c ? null : <CommentCard comment={c} />
+              !c ? null : <CommentCard key={c.id} comment={c} />
             )
           )}
         </Flex>
