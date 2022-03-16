@@ -1,6 +1,8 @@
 fragment RegularUser on User {
   id
   username
+  email
   role
   banned
+  createdAt
 }

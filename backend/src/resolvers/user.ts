@@ -24,6 +24,14 @@ import { FieldError } from "../entities/FieldError";
 import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()
+class BanResponse {
+  @Field(() => String, { nullable: true })
+  error?: string;
+  @Field(() => User, { nullable: true })
+  user?: User;
+}
+
+@ObjectType()
 class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
@@ -36,7 +44,8 @@ export class UserResolver {
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: MyContext) {
     // vlastni email - ukazat email
-    if (req.session.userId === user.id) {
+
+    if (req.session.userId === user.id || req.session.userRole === "admin") {
       return user.email;
     }
     // cizi email - neukazat email
@@ -151,6 +160,8 @@ export class UserResolver {
       return { errors };
     }
 
+    console.log("register options: ", options);
+
     const hashedPassword = await argon2.hash(options.password);
     let user;
     try {
@@ -264,25 +275,41 @@ export class UserResolver {
     return await User.findOne({ where: { username }, relations: ["posts"] });
   }
 
-  @Mutation(() => User)
+  @Mutation(() => BanResponse)
   @UseMiddleware(isAuth)
   async banUser(
-    @Arg("id", () => Int) id: number,
+    @Arg("username", () => String) username: string,
+    @Arg("action", () => String) action: string,
     @Ctx() { req }: MyContext
-  ): Promise<User | undefined> {
+  ): Promise<BanResponse> {
     if (req.session.userRole !== "admin") {
-      throw new Error("Nejste admin");
+      return { error: "Nejste admin" };
     }
 
-    let banned = true;
-    const user = await User.findOne(id);
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+      return { error: "Tento uživatel neexistuje." };
+    }
 
     if (user?.role === "admin") {
-      throw new Error("Nelze zabanovat admina");
+      return { error: "Nelze zabanovat admina." };
     }
 
-    if (user?.banned) {
+    let banned = false;
+
+    if (action === "ban") {
+      if (user?.banned) {
+        return { error: "Uživatel je již zabanovaný." };
+      }
+      banned = true;
+    } else if (action === "unban") {
+      if (!user?.banned) {
+        return { error: "Uživatel již není zabanovaný." };
+      }
       banned = false;
+    } else {
+      return { error: "neznama akce" };
     }
 
     const result = await getConnection()
@@ -290,11 +317,16 @@ export class UserResolver {
       .update(User)
       .set({ banned })
       .where("id = :id", {
-        id,
+        id: user.id,
       })
       .returning("*")
       .execute();
 
-    return result.raw[0];
+    return { user: result.raw[0] };
+  }
+
+  @Query(() => [User])
+  async bannedUsers(): Promise<User[] | undefined> {
+    return await User.find({ where: { banned: true } });
   }
 }

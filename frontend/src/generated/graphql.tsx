@@ -20,6 +20,12 @@ export type AddCommentResponse = {
   errors?: Maybe<Array<FieldError>>;
 };
 
+export type BanResponse = {
+  __typename?: 'BanResponse';
+  error?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+};
+
 export type Comment = {
   __typename?: 'Comment';
   createdAt: Scalars['String'];
@@ -51,7 +57,7 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   addComment: AddCommentResponse;
-  banUser: User;
+  banUser: BanResponse;
   changePassword: UserResponse;
   createPost: Post;
   deletePost: Scalars['Boolean'];
@@ -71,7 +77,8 @@ export type MutationAddCommentArgs = {
 
 
 export type MutationBanUserArgs = {
-  id: Scalars['Int'];
+  action: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
@@ -151,6 +158,7 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
+  bannedUsers: Array<User>;
   comment: Comment;
   comments?: Maybe<Comments>;
   hello: Scalars['String'];
@@ -223,9 +231,9 @@ export type RegularCommentFragment = { __typename?: 'Comment', id: number, postI
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
-export type RegularUserFragment = { __typename?: 'User', id: number, username: string, role: string, banned: boolean };
+export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string };
 
-export type RegularUserReponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } | null | undefined };
+export type RegularUserReponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
@@ -235,11 +243,12 @@ export type AddCommentMutationVariables = Exact<{
 export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'AddCommentResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, comment?: { __typename?: 'Comment', id: number, postId: number, text: string, createdAt: string, user: { __typename?: 'User', id: number, username: string } } | null | undefined } };
 
 export type BanUserMutationVariables = Exact<{
-  id: Scalars['Int'];
+  username: Scalars['String'];
+  action: Scalars['String'];
 }>;
 
 
-export type BanUserMutation = { __typename?: 'Mutation', banUser: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } };
+export type BanUserMutation = { __typename?: 'Mutation', banUser: { __typename?: 'BanResponse', error?: string | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -247,7 +256,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } | null | undefined } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
 
 export type CreatePostMutationVariables = Exact<{
   input: PostInput;
@@ -276,7 +285,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } | null | undefined } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -288,7 +297,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } | null | undefined } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
 
 export type RemoveCommentMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -314,6 +323,11 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
 
+export type BannedUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BannedUsersQuery = { __typename?: 'Query', bannedUsers: Array<{ __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string }> };
+
 export type CommentsQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
@@ -324,7 +338,7 @@ export type CommentsQuery = { __typename?: 'Query', comments?: { __typename?: 'C
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, role: string, banned: boolean } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -353,7 +367,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', createdAt: string, id: number, username: string, role: string, banned: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', createdAt: string, id: number, username: string, email: string, role: string, banned: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -394,8 +408,10 @@ export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   username
+  email
   role
   banned
+  createdAt
 }
     `;
 export const RegularUserReponseFragmentDoc = gql`
@@ -427,9 +443,12 @@ export function useAddCommentMutation() {
   return Urql.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument);
 };
 export const BanUserDocument = gql`
-    mutation BanUser($id: Int!) {
-  banUser(id: $id) {
-    ...RegularUser
+    mutation BanUser($username: String!, $action: String!) {
+  banUser(username: $username, action: $action) {
+    user {
+      ...RegularUser
+    }
+    error
   }
 }
     ${RegularUserFragmentDoc}`;
@@ -545,6 +564,17 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
+export const BannedUsersDocument = gql`
+    query BannedUsers {
+  bannedUsers {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+export function useBannedUsersQuery(options: Omit<Urql.UseQueryArgs<BannedUsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<BannedUsersQuery>({ query: BannedUsersDocument, ...options });
 };
 export const CommentsDocument = gql`
     query Comments($postId: Int!) {

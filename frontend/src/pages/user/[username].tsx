@@ -14,6 +14,7 @@ import { PostCard } from "../../components/PostCard";
 import moment from "moment";
 import "moment/locale/cs";
 import { isServer } from "../../utils/isServer";
+import { BanButton } from "../../components/BanButton";
 
 export const User: React.FC = ({}) => {
   const router = useRouter();
@@ -59,21 +60,11 @@ export const User: React.FC = ({}) => {
           {data.user.username}
         </Text>
         <Flex flexDirection="row">
-          <Text color="gray.500">Účet založen: </Text>
+          <Text color="gray.500">Zaregistrován: </Text>
           <Text ml={3}>
             {moment(new Date(parseInt(data.user.createdAt))).format("LLLL")}
           </Text>
-          {meData?.me?.role !== "admin" ? null : (
-            <Button
-              ml="auto"
-              colorScheme={data.user.banned ? "green" : "red"}
-              onClick={() => {
-                banUser({ id: data.user.id });
-              }}
-            >
-              {data.user.banned ? "Odbanovat" : "Zabanovat"}
-            </Button>
-          )}
+          {meData?.me?.role !== "admin" ? null : <BanButton user={data.user} />}
         </Flex>
       </Flex>
       <Text mt={10} color="gray.500" fontSize={18}>

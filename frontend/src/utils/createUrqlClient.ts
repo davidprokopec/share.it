@@ -127,6 +127,17 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            banUser: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "bannedUsers"
+              );
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "bannedUsers", fi.arguments);
+              });
+              cache.invalidate("Query", "bannedUsers", {});
+            },
+
             removeComment: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Comment",

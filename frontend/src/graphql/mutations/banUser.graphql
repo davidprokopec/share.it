@@ -1,5 +1,8 @@
-mutation BanUser($id: Int!) {
-  banUser(id: $id) {
-    ...RegularUser
+mutation BanUser($username: String!, $action: String!) {
+  banUser(username: $username, action: $action) {
+    user {
+      ...RegularUser
+    }
+    error
   }
 }

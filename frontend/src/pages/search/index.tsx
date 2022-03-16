@@ -12,13 +12,13 @@ const SearchError = ({}) => {
         align="center"
         fontSize="1.5rem"
         bg="gray.400"
+        w="50%"
         pt={5}
         pb={5}
         color="white"
         fontWeight="bolder"
-        w="60%"
       >
-        Nebyl zadaný text k vyhledávání
+        Nebyl zadaný text k hledání
       </Text>
     </Layout>
   );

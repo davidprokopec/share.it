@@ -26,7 +26,15 @@ export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
   const [, removeComment] = useRemoveCommentMutation();
 
   return (
-    <Box px={8} py={4} rounded="lg" shadow="lg" bg="#DEE7E7" my={2}>
+    <Box
+      px={8}
+      py={4}
+      rounded="lg"
+      shadow="lg"
+      bg="#DEE7E7"
+      my={2}
+      key={comment.id}
+    >
       <Flex flexDirection="column">
         <NextLink href="/user/[username]" as={`/user/${comment.user.username}`}>
           <Link>

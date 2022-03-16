@@ -45,11 +45,20 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             Vytvořit příspěvek
           </Button>
         </NextLink>
-        <Box mr={2}>
+        <Flex mr={2} alignItems="center" justifyContent="center" pos="relative">
           <NextLink href="/user/[username]" as={`/user/${data.me.username}`}>
             <Link>{data.me.username}</Link>
           </NextLink>
-        </Box>
+          {data.me.role !== "admin" ? null : (
+            <Box pos="absolute" top="5">
+              <NextLink href="/admin/">
+                <Link color="blue.100" fontSize="0.7rem">
+                  admin
+                </Link>
+              </NextLink>
+            </Box>
+          )}
+        </Flex>
         <Button
           onClick={async () => {
             await logout();
@@ -66,7 +75,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   }
   return (
     <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4}>
-      <Flex flex={1} m="auto" maxW={800} alignItems="center">
+      <Flex flex={1} m="auto" maxW={1000} alignItems="center">
         <NextLink href="/">
           <Link style={{ textDecoration: "none", marginRight: "auto" }}>
             <Heading
@@ -101,6 +110,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                 <Button
                   type="submit"
                   isLoading={isSubmitting}
+                  bg="whiteAlpha.500"
                   fontSize={[12, 15]}
                 >
                   Hledat
