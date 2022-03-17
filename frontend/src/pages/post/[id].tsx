@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import "moment/locale/cs";
@@ -19,6 +27,7 @@ import { isServer } from "../../utils/isServer";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { useGetIntId } from "../../utils/usetGetIntId";
+import NextLink from "next/link";
 
 const Post = ({}) => {
   const [{ data, fetching }] = useGetPostFromUrl();
@@ -73,7 +82,15 @@ const Post = ({}) => {
             >
               {data?.post?.title}
             </Heading>
-            <Text color="gray.600" mb={4}>
+            <NextLink
+              href="/user/[username]"
+              as={`/user/${data?.post.creator.username}`}
+            >
+              <Link>
+                <Text>{data?.post.creator.username}</Text>
+              </Link>
+            </NextLink>
+            <Text color="gray.600" mt={1} mb={4}>
               Zveřejněno v{" "}
               {moment(new Date(parseInt(data?.post?.createdAt))).format("LL")}
             </Text>

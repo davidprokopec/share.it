@@ -24,7 +24,9 @@ import { FieldError } from "../entities/FieldError";
 import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()
-class BanResponse {
+class BanAdminResponse {
+  @Field(() => String, { nullable: false })
+  status!: string;
   @Field(() => String, { nullable: true })
   error?: string;
   @Field(() => User, { nullable: true })
@@ -45,7 +47,11 @@ export class UserResolver {
   email(@Root() user: User, @Ctx() { req }: MyContext) {
     // vlastni email - ukazat email
 
-    if (req.session.userId === user.id || req.session.userRole === "admin") {
+    if (
+      req.session.userId === user.id ||
+      req.session.userRole === "admin" ||
+      req.session.userRole === "owner"
+    ) {
       return user.email;
     }
     // cizi email - neukazat email
@@ -275,41 +281,59 @@ export class UserResolver {
     return await User.findOne({ where: { username }, relations: ["posts"] });
   }
 
-  @Mutation(() => BanResponse)
+  @Mutation(() => BanAdminResponse)
   @UseMiddleware(isAuth)
   async banUser(
     @Arg("username", () => String) username: string,
     @Arg("action", () => String) action: string,
     @Ctx() { req }: MyContext
-  ): Promise<BanResponse> {
-    if (req.session.userRole !== "admin") {
-      return { error: "Nejste admin" };
+  ): Promise<BanAdminResponse> {
+    if (req.session.userRole !== "admin" && req.session.userRole !== "owner") {
+      return {
+        status: "error",
+        error: "Nejste admin",
+      };
     }
 
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
-      return { error: "Tento uživatel neexistuje." };
+      return {
+        status: "error",
+        error: "Tento uživatel neexistuje.",
+      };
     }
 
-    if (user?.role === "admin") {
-      return { error: "Nelze zabanovat admina." };
+    if (user?.role === "owner") {
+      return {
+        status: "error",
+        error: "Nelze zabanovat majitele.",
+      };
     }
 
     let banned = false;
 
     if (action === "ban") {
       if (user?.banned) {
-        return { error: "Uživatel je již zabanovaný." };
+        return {
+          status: "error",
+          error: "Uživatel je již zabanovaný.",
+        };
       }
       banned = true;
     } else if (action === "unban") {
       if (!user?.banned) {
-        return { error: "Uživatel již není zabanovaný." };
+        return {
+          status: "error",
+          error: "Uživatel již není zabanovaný.",
+        };
       }
       banned = false;
     } else {
-      return { error: "neznama akce" };
+      return {
+        status: "error",
+        error: "neznama akce",
+      };
     }
 
     const result = await getConnection()
@@ -322,11 +346,90 @@ export class UserResolver {
       .returning("*")
       .execute();
 
-    return { user: result.raw[0] };
+    return {
+      status: "success",
+      user: result.raw[0],
+    };
   }
 
   @Query(() => [User])
   async bannedUsers(): Promise<User[] | undefined> {
     return await User.find({ where: { banned: true } });
+  }
+
+  @Mutation(() => BanAdminResponse)
+  @UseMiddleware(isAuth)
+  async setAdminUser(
+    @Arg("username", () => String) username: string,
+    @Arg("action", () => String) action: string,
+    @Ctx() { req }: MyContext
+  ): Promise<BanAdminResponse> {
+    if (req.session.userRole !== "owner") {
+      return {
+        status: "error",
+        error: "Nejste hlavní admin.",
+      };
+    }
+
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+      return {
+        status: "error",
+        error: "Tento uživatel neexistuje.",
+      };
+    }
+
+    if (user.role === "owner") {
+      return {
+        status: "error",
+        error: "Nelze odebrat role admina hlavnímu adminovi.",
+      };
+    }
+
+    let role = "user";
+
+    if (action === "add") {
+      if (user.role === "admin") {
+        return {
+          status: "error",
+          error: "Uživatel je již admin.",
+        };
+      }
+      role = "admin";
+    } else if (action === "remove") {
+      if (user.role !== "admin") {
+        return {
+          status: "error",
+          error: "Uživatel již není admin.",
+        };
+      }
+      role = "user";
+    } else {
+      return {
+        status: "error",
+        error: "neznama akce",
+      };
+    }
+
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(User)
+      .set({ role })
+      .where("id = :id", {
+        id: user.id,
+      })
+      .returning("*")
+      .execute();
+
+    return {
+      status: "success",
+      user: result.raw[0],
+    };
+  }
+
+  @Query(() => [User])
+  async adminUsers(): Promise<User[] | undefined> {
+    return await User.find({ where: [{ role: "admin" }, { role: "owner" }] });
   }
 }

@@ -190,7 +190,11 @@ export class PostResolver {
     if (!post) {
       return null;
     }
-    if (user?.role !== "admin" && post.creatorId !== req.session.userId) {
+    if (
+      user?.role !== "admin" &&
+      user?.role !== "owner" &&
+      post.creatorId !== req.session.userId
+    ) {
       throw new Error("not authorized");
     }
 
@@ -219,7 +223,11 @@ export class PostResolver {
     if (!post) {
       return false;
     }
-    if (user?.role !== "admin" && post.creatorId !== req.session.userId) {
+    if (
+      user?.role !== "admin" &&
+      user?.role !== "owner" &&
+      post.creatorId !== req.session.userId
+    ) {
       throw new Error("not authorized");
     }
 

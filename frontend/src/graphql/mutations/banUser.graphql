@@ -3,6 +3,7 @@ mutation BanUser($username: String!, $action: String!) {
     user {
       ...RegularUser
     }
+    status
     error
   }
 }

@@ -127,6 +127,16 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            setAdminUser: (_result, args, cache, info) => {
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (info) => info.fieldName === "adminUsers"
+              );
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "adminUsers", fi.arguments);
+              });
+              cache.invalidate("Query", "adminUsers", {});
+            },
             banUser: (_result, args, cache, info) => {
               const allFields = cache.inspectFields("Query");
               const fieldInfos = allFields.filter(

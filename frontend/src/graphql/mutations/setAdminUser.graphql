@@ -1,0 +1,9 @@
+mutation SetAdminUser($username: String!, $action: String!) {
+  setAdminUser(username: $username, action: $action) {
+    user {
+      ...RegularUser
+    }
+    status
+    error
+  }
+}

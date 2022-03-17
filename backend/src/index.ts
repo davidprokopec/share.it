@@ -34,6 +34,15 @@ const main = async () => {
   });
   await conn.runMigrations();
 
+  await conn
+    .createQueryBuilder()
+    .update(User)
+    .set({ role: "owner" })
+    .where("username = :username", {
+      username: "david",
+    })
+    .execute();
+
   // Post.delete({});
 
   const app = express();

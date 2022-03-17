@@ -64,7 +64,10 @@ export const User: React.FC = ({}) => {
           <Text ml={3}>
             {moment(new Date(parseInt(data.user.createdAt))).format("LLLL")}
           </Text>
-          {meData?.me?.role !== "admin" ? null : <BanButton user={data.user} />}
+          {meData?.me?.role !== "admin" &&
+          meData?.me?.role !== "owner" ? null : (
+            <BanButton user={data.user} />
+          )}
         </Flex>
       </Flex>
       <Text mt={10} color="gray.500" fontSize={18}>

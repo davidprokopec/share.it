@@ -20,9 +20,10 @@ export type AddCommentResponse = {
   errors?: Maybe<Array<FieldError>>;
 };
 
-export type BanResponse = {
-  __typename?: 'BanResponse';
+export type BanAdminResponse = {
+  __typename?: 'BanAdminResponse';
   error?: Maybe<Scalars['String']>;
+  status: Scalars['String'];
   user?: Maybe<User>;
 };
 
@@ -57,7 +58,7 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   addComment: AddCommentResponse;
-  banUser: BanResponse;
+  banUser: BanAdminResponse;
   changePassword: UserResponse;
   createPost: Post;
   deletePost: Scalars['Boolean'];
@@ -66,6 +67,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   removeComment: Scalars['Boolean'];
+  setAdminUser: BanAdminResponse;
   updatePost?: Maybe<Post>;
   vote: Scalars['Boolean'];
 };
@@ -119,6 +121,12 @@ export type MutationRemoveCommentArgs = {
 };
 
 
+export type MutationSetAdminUserArgs = {
+  action: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
 export type MutationUpdatePostArgs = {
   id: Scalars['Int'];
   text: Scalars['String'];
@@ -158,6 +166,7 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
+  adminUsers: Array<User>;
   bannedUsers: Array<User>;
   comment: Comment;
   comments?: Maybe<Comments>;
@@ -248,7 +257,7 @@ export type BanUserMutationVariables = Exact<{
 }>;
 
 
-export type BanUserMutation = { __typename?: 'Mutation', banUser: { __typename?: 'BanResponse', error?: string | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
+export type BanUserMutation = { __typename?: 'Mutation', banUser: { __typename?: 'BanAdminResponse', status: string, error?: string | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -306,6 +315,14 @@ export type RemoveCommentMutationVariables = Exact<{
 
 export type RemoveCommentMutation = { __typename?: 'Mutation', removeComment: boolean };
 
+export type SetAdminUserMutationVariables = Exact<{
+  username: Scalars['String'];
+  action: Scalars['String'];
+}>;
+
+
+export type SetAdminUserMutation = { __typename?: 'Mutation', setAdminUser: { __typename?: 'BanAdminResponse', status: string, error?: string | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string } | null | undefined } };
+
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int'];
   title: Scalars['String'];
@@ -322,6 +339,11 @@ export type VoteMutationVariables = Exact<{
 
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
+
+export type AdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminUsersQuery = { __typename?: 'Query', adminUsers: Array<{ __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string }> };
 
 export type BannedUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -448,6 +470,7 @@ export const BanUserDocument = gql`
     user {
       ...RegularUser
     }
+    status
     error
   }
 }
@@ -542,6 +565,21 @@ export const RemoveCommentDocument = gql`
 export function useRemoveCommentMutation() {
   return Urql.useMutation<RemoveCommentMutation, RemoveCommentMutationVariables>(RemoveCommentDocument);
 };
+export const SetAdminUserDocument = gql`
+    mutation SetAdminUser($username: String!, $action: String!) {
+  setAdminUser(username: $username, action: $action) {
+    user {
+      ...RegularUser
+    }
+    status
+    error
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+export function useSetAdminUserMutation() {
+  return Urql.useMutation<SetAdminUserMutation, SetAdminUserMutationVariables>(SetAdminUserDocument);
+};
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: Int!, $title: String!, $text: String!) {
   updatePost(id: $id, title: $title, text: $text) {
@@ -564,6 +602,17 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
+export const AdminUsersDocument = gql`
+    query AdminUsers {
+  adminUsers {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+export function useAdminUsersQuery(options: Omit<Urql.UseQueryArgs<AdminUsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AdminUsersQuery>({ query: AdminUsersDocument, ...options });
 };
 export const BannedUsersDocument = gql`
     query BannedUsers {

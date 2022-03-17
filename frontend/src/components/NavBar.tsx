@@ -49,7 +49,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <NextLink href="/user/[username]" as={`/user/${data.me.username}`}>
             <Link>{data.me.username}</Link>
           </NextLink>
-          {data.me.role !== "admin" ? null : (
+          {data.me.role !== "admin" && data.me.role !== "owner" ? null : (
             <Box pos="absolute" top="5">
               <NextLink href="/admin/">
                 <Link color="blue.100" fontSize="0.7rem">
