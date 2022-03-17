@@ -21,7 +21,6 @@ import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React from "react";
-import { useState } from "react";
 import { BanButton } from "../../components/BanButton";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
@@ -36,7 +35,7 @@ import { useIsBanned } from "../../utils/useIsBanned";
 export const BanOverview: React.FC = ({}) => {
   useIsBanned();
   useIsAdmin();
-  const [{ data, fetching }] = useBannedUsersQuery();
+  const [{ data }] = useBannedUsersQuery();
   const [, banUser] = useBanUserMutation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,9 +51,13 @@ export const BanOverview: React.FC = ({}) => {
 
   return (
     <Layout>
-      <Text fontWeight="bold" fontSize={20} textAlign="center" mb={5}>
-        Admin panel
-      </Text>
+      <NextLink href="/admin">
+        <Link>
+          <Text fontWeight="bold" fontSize={20} textAlign="center" mb={5}>
+            Admin panel
+          </Text>
+        </Link>
+      </NextLink>
       <Flex flexDirection="column" rounded="md" bg="gray.100" p={5}>
         <Flex
           flexDirection="row"

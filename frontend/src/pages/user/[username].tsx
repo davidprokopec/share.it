@@ -1,20 +1,16 @@
-import React from "react";
-import { Layout } from "../../components/Layout";
-import { useRouter } from "next/router";
-import {
-  useBanUserMutation,
-  useMeQuery,
-  useUserQuery,
-} from "../../generated/graphql";
-import { Loading } from "../../components/Loading";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
-import { PostCard } from "../../components/PostCard";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
 import "moment/locale/cs";
-import { isServer } from "../../utils/isServer";
+import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import React from "react";
 import { BanButton } from "../../components/BanButton";
+import { Layout } from "../../components/Layout";
+import { Loading } from "../../components/Loading";
+import { PostCard } from "../../components/PostCard";
+import { useMeQuery, useUserQuery } from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
+import { isServer } from "../../utils/isServer";
 
 export const User: React.FC = ({}) => {
   const router = useRouter();
@@ -24,11 +20,9 @@ export const User: React.FC = ({}) => {
 
   const [{ data, fetching }] = useUserQuery({ variables: { username } });
 
-  const [{ data: meData, fetching: meFetching }] = useMeQuery({
+  const [{ data: meData }] = useMeQuery({
     pause: isServer(),
   });
-
-  const [, banUser] = useBanUserMutation();
 
   if (fetching) {
     return (

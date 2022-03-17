@@ -11,13 +11,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Stack,
   Text,
   useDisclosure,
@@ -37,13 +30,13 @@ import {
   useSetAdminUserMutation,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useIsOwner } from "../../utils/useIsOwner";
 import { useIsBanned } from "../../utils/useIsBanned";
+import { useIsOwner } from "../../utils/useIsOwner";
 
 export const AdminOverview: React.FC = ({}) => {
   useIsBanned();
   useIsOwner();
-  const [{ data, fetching }] = useAdminUsersQuery();
+  const [{ data }] = useAdminUsersQuery();
   const [, setAdmin] = useSetAdminUserMutation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,9 +47,13 @@ export const AdminOverview: React.FC = ({}) => {
 
   return (
     <Layout>
-      <Text fontWeight="bold" fontSize={20} textAlign="center" mb={5}>
-        Admin panel
-      </Text>
+      <NextLink href="/admin">
+        <Link>
+          <Text fontWeight="bold" fontSize={20} textAlign="center" mb={5}>
+            Admin panel
+          </Text>
+        </Link>
+      </NextLink>
       <Flex flexDirection="column" rounded="md" bg="gray.100" p={5}>
         <Flex
           flexDirection="row"

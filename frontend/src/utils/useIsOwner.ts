@@ -3,7 +3,7 @@ import { useMeQuery } from "../generated/graphql";
 
 export const useIsOwner = async () => {
   const router = useRouter();
-  const [{ data, fetching }] = await useMeQuery();
+  const [{ data }] = await useMeQuery();
 
   if (data?.me?.role !== "owner") {
     router.push("/");

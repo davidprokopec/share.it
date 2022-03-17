@@ -31,7 +31,7 @@ import NextLink from "next/link";
 
 const Post = ({}) => {
   const [{ data, fetching }] = useGetPostFromUrl();
-  const [{ data: meData, fetching: meFetching }] = useMeQuery({
+  const [{ data: meData }] = useMeQuery({
     pause: isServer(),
   });
 

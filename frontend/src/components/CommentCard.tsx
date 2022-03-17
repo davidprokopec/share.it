@@ -9,13 +9,13 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment";
 import "moment/locale/cs";
+import NextLink from "next/link";
 import React from "react";
 import {
   RegularCommentFragment,
   useMeQuery,
   useRemoveCommentMutation,
 } from "../generated/graphql";
-import NextLink from "next/link";
 
 interface CommentProps {
   comment: RegularCommentFragment;
@@ -50,7 +50,8 @@ export const CommentCard: React.FC<CommentProps> = ({ comment }) => {
           {comment.text}
         </Text>
         {meData?.me?.id !== comment.user.id &&
-        meData?.me?.role !== "admin" ? null : (
+        meData?.me?.role !== "admin" &&
+        meData?.me?.role !== "owner" ? null : (
           <IconButton
             mt="auto"
             mb="auto"
