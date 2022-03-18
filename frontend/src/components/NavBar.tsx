@@ -74,8 +74,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4}>
-      <Flex flex={1} m="auto" maxW={1000} alignItems="center">
+    <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4} w="100vw">
+      <Flex flex={1} m="auto" maxW="100vw" w="100vw" alignItems="center">
         <NextLink href="/">
           <Link style={{ textDecoration: "none", marginRight: "auto" }}>
             <Heading

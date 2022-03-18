@@ -1,5 +1,5 @@
 import { validateRegister } from "./../utils/validateRegister";
-import { COOKIE_NAME, FORGOT_PASSWORD_PREFIX } from "./../constants";
+import { COOKIE_NAME, FORGOT_PASSWORD_PREFIX, __prod__ } from "./../constants";
 import { User } from "./../entities/User";
 import { MyContext } from "./../types";
 import {
@@ -137,9 +137,13 @@ export class UserResolver {
       1000 * 60 * 60 * 24 * 3
     ); // 3 dny
 
+    const domain = __prod__
+      ? "https://www.davidprokopec.me/"
+      : "http://localhost:3000";
+
     await sendEmail(
       email,
-      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
+      `<a href="${domain}/change-password/${token}">reset password</a>`
     );
 
     return true;

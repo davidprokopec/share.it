@@ -10,6 +10,7 @@ import { useState } from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import NextLink from "next/link";
+import { Layout } from "../../components/Layout";
 
 const ChangePassword: NextPage = () => {
   const router = useRouter();
@@ -17,57 +18,61 @@ const ChangePassword: NextPage = () => {
   const [tokenError, setTokenError] = useState("");
 
   return (
-    <Wrapper variant="small">
-      <Formik
-        initialValues={{ newPassword: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          const response = await changePassword({
-            newPassword: values.newPassword,
-            token:
-              typeof router.query.token === "string" ? router.query.token : "",
-          });
-          if (response.data?.changePassword.errors) {
-            const errorMap = toErrorMap(response.data.changePassword.errors);
-            if ("token" in errorMap) {
-              setTokenError(errorMap.token);
+    <Layout>
+      <Wrapper variant="small">
+        <Formik
+          initialValues={{ newPassword: "" }}
+          onSubmit={async (values, { setErrors }) => {
+            const response = await changePassword({
+              newPassword: values.newPassword,
+              token:
+                typeof router.query.token === "string"
+                  ? router.query.token
+                  : "",
+            });
+            if (response.data?.changePassword.errors) {
+              const errorMap = toErrorMap(response.data.changePassword.errors);
+              if ("token" in errorMap) {
+                setTokenError(errorMap.token);
+              }
+              setErrors(errorMap);
+            } else if (response.data?.changePassword.user) {
+              router.push("/");
             }
-            setErrors(errorMap);
-          } else if (response.data?.changePassword.user) {
-            router.push("/");
-          }
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField
-              bg="white"
-              name="newPassword"
-              placeholder="new password"
-              label="New Password"
-              type="password"
-            ></InputField>
-            {tokenError ? (
-              <Flex>
-                <Box mr={4} color="red">
-                  {tokenError}
-                </Box>
-                <NextLink href="/forgot-password">
-                  <Link>Klikni zde pro získání nového tokenu!</Link>
-                </NextLink>
-              </Flex>
-            ) : null}
-            <Button
-              mt={4}
-              type="submit"
-              isLoading={isSubmitting}
-              colorScheme="teal"
-            >
-              Změnit Heslo
-            </Button>
-          </Form>
-        )}
-      </Formik>
-    </Wrapper>
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <InputField
+                bg="white"
+                name="newPassword"
+                placeholder="nové heslo"
+                label="Nové heslo"
+                type="password"
+              ></InputField>
+              {tokenError ? (
+                <Flex>
+                  <Box mr={4} color="red">
+                    {tokenError}
+                  </Box>
+                  <NextLink href="/forgot-password">
+                    <Link>Klikni zde pro získání nového tokenu!</Link>
+                  </NextLink>
+                </Flex>
+              ) : null}
+              <Button
+                mt={4}
+                type="submit"
+                isLoading={isSubmitting}
+                colorScheme="teal"
+              >
+                Změnit Heslo
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Wrapper>
+    </Layout>
   );
 };
 

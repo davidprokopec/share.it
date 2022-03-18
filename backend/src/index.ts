@@ -1,3 +1,4 @@
+import argon2 from "argon2";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import "dotenv-safe/config";
 import { UserResolver } from "./resolvers/user";
@@ -21,36 +22,30 @@ import { createUserLoader } from "./utils/createUserLoader";
 import { createUpvoteLoader } from "./utils/createUpvoteLoader";
 import { Comment } from "./entities/Comment";
 import { CommentResolver } from "./resolvers/comment";
+import { createOwnerUser } from "./utils/createOwnerUser";
 
 const main = async () => {
   // sendEmail("bob@bob.com", "hello");
   const conn = await createConnection({
     type: "postgres",
-    url: __prod__ ? process.env.DB_HOST : process.env.DATABASE_URL,
+    url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Upvote, Comment],
   });
   await conn.runMigrations();
 
-  await conn
-    .createQueryBuilder()
-    .update(User)
-    .set({ role: "owner" })
-    .where("username = :username", {
-      username: "david",
-    })
-    .execute();
+  if (__prod__) {
+    createOwnerUser();
+  }
 
   // Post.delete({});
 
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis(
-    __prod__ ? process.env.REDIS_HOST : process.env.REDIS_URL
-  );
+  const redis = new Redis(process.env.REDIS_URL);
 
   app.set("trust proxy", 1);
 
@@ -73,7 +68,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax",
         secure: __prod__,
-        domain: __prod__ ? ".davidrokopec.me" : undefined,
+        domain: __prod__ ? ".davidprokopec.me" : undefined,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
