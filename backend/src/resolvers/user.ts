@@ -143,7 +143,7 @@ export class UserResolver {
 
     await sendEmail(
       email,
-      `<a href="${domain}/change-password/${token}">reset password</a>`
+      `<a href="${domain}/change-password/${token}">změnit heslo</a>`
     );
 
     return true;
@@ -169,8 +169,6 @@ export class UserResolver {
     if (errors) {
       return { errors };
     }
-
-    console.log("register options: ", options);
 
     const hashedPassword = await argon2.hash(options.password);
     let user;
@@ -439,6 +437,6 @@ export class UserResolver {
 
   @Query(() => [User])
   async users(): Promise<User[] | undefined> {
-    return await (await User.find()).reverse();
+    return await await User.find({ order: { id: "ASC" } });
   }
 }

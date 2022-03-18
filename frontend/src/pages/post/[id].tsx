@@ -1,16 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Link,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import moment from "moment";
 import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
+import NextLink from "next/link";
 import { CommentCard } from "../../components/CommentCard";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { InputField } from "../../components/InputField";
@@ -27,7 +20,6 @@ import { isServer } from "../../utils/isServer";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { useGetIntId } from "../../utils/usetGetIntId";
-import NextLink from "next/link";
 
 const Post = ({}) => {
   const [{ data, fetching }] = useGetPostFromUrl();
@@ -62,45 +54,66 @@ const Post = ({}) => {
   return (
     <Layout>
       <Stack>
-        <Flex shadow="md" bg="#DEE7E7" rounded="lg" p={5} borderWidth="1px">
-          <VoteSection post={data?.post as any} />
-          <Flex
-            flex={1}
-            flexDirection="column"
-            borderWidth="1px"
-            shadow="md"
-            rounded="md"
-            pl={4}
-            pb={4}
-          >
-            <Heading
-              textAlign="center"
-              mb={4}
-              mt={3}
-              color="cyan.900"
-              rounded="lg"
-            >
-              {data?.post?.title}
-            </Heading>
-            <NextLink
-              href="/user/[username]"
-              as={`/user/${data?.post.creator.username}`}
-            >
-              <Link>
-                <Text>{data?.post.creator.username}</Text>
-              </Link>
-            </NextLink>
-            <Text color="gray.600" mt={1} mb={4}>
-              Zveřejněno v{" "}
-              {moment(new Date(parseInt(data?.post?.createdAt))).format("LL")}
-            </Text>
-            <Box mb={4} overflow="hidden">
-              {data?.post?.text}
+        <Flex
+          shadow="md"
+          bg="#DEE7E7"
+          rounded="lg"
+          p={5}
+          borderWidth="1px"
+          flexDirection="column"
+        >
+          <Flex flexDirection="row" w="100%">
+            <Box display={{ md: "inline", sm: "none" }}>
+              <VoteSection post={data?.post} direction="column" />
             </Box>
-            <Box ml="auto" mr={4}>
+            <Flex
+              flex={1}
+              flexDirection="column"
+              borderWidth="1px"
+              shadow="md"
+              rounded="md"
+              pl={4}
+              pb={4}
+            >
+              <Text
+                textAlign="center"
+                mb={4}
+                mt={3}
+                color="cyan.900"
+                rounded="lg"
+                display="block"
+                noOfLines={3}
+                fontWeight="bolder"
+                fontSize="1.8em"
+                maxW="70vw"
+              >
+                {data?.post?.title}
+              </Text>
+              <NextLink
+                href="/user/[username]"
+                as={`/user/${data?.post.creator.username}`}
+              >
+                <Link>
+                  <Text>{data?.post.creator.username}</Text>
+                </Link>
+              </NextLink>
+              <Text color="gray.600" mt={1} mb={4}>
+                Zveřejněno v{" "}
+                {moment(new Date(parseInt(data?.post?.createdAt))).format("LL")}
+              </Text>
+              <Box mb={4} maxW="70vw">
+                {data?.post?.text}
+              </Box>
+            </Flex>
+          </Flex>
+          <Flex mt={2} justifyContent="center" w="100%" alignItems="center">
+            <Box display={{ md: "none", sm: "inline" }}>
+              <VoteSection post={data?.post} direction="row" />
+            </Box>
+            <Box ml="auto">
               <EditDeletePostButtons
-                id={data.post.id}
-                creatorId={data.post.creator.id}
+                id={data?.post.id}
+                creatorId={data.post.creatorId}
               />
             </Box>
           </Flex>
@@ -153,13 +166,17 @@ const Post = ({}) => {
               </Formik>
             </Flex>
           )}
-          <Text textAlign="left">Komentáře</Text>
           {commentsFetching ? (
             <Loading />
           ) : (
-            commentsData!.comments!.comments.map((c) =>
-              !c ? null : <CommentCard key={c.id} comment={c} />
-            )
+            <>
+              {!commentsData!.comments!.comments[0] ? null : (
+                <Text textAlign="left">Komentáře</Text>
+              )}
+              {commentsData!.comments!.comments.map((c) =>
+                !c ? null : <CommentCard key={c.id} comment={c} />
+              )}
+            </>
           )}
         </Flex>
       </Stack>

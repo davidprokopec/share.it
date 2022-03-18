@@ -4,10 +4,11 @@ import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { BanButton } from "../../components/BanButton";
+import { BanPopover } from "../../components/BanPopover";
 import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
 import { PostCard } from "../../components/PostCard";
+import { SetAdminPopover } from "../../components/SetAdminPopover";
 import { useMeQuery, useUserQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { isServer } from "../../utils/isServer";
@@ -55,7 +56,8 @@ export const User: React.FC = ({}) => {
         </Text>
         <Flex
           flexDirection={{ md: "row", sm: "column" }}
-          justifyContent="center"
+          justifyContent="space-between"
+          alignItems="center"
         >
           <Flex flexDirection="row">
             <Text color="gray.500">Zaregistrován: </Text>
@@ -63,10 +65,15 @@ export const User: React.FC = ({}) => {
               {moment(new Date(parseInt(data.user.createdAt))).format("LLLL")}
             </Text>
           </Flex>
-          {meData?.me?.role !== "admin" &&
-          meData?.me?.role !== "owner" ? null : (
-            <BanButton user={data.user} />
-          )}
+          <Flex flexDirection="column">
+            {meData?.me?.role !== "admin" &&
+            meData?.me?.role !== "owner" ? null : (
+              <BanPopover user={data.user} />
+            )}
+            {meData?.me?.role !== "owner" ? null : (
+              <SetAdminPopover user={data.user} />
+            )}
+          </Flex>
         </Flex>
       </Flex>
       <Text mt={10} color="gray.500" fontSize={18}>

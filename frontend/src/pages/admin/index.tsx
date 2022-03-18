@@ -23,16 +23,16 @@ export const Admin: React.FC = ({}) => {
         bg="gray.100"
         rounded="md"
         p={5}
-        justifyContent={data?.me?.role === "owner" ? "space-around" : "center"}
+        justifyContent="center"
         alignItems="center"
-        flexDirection={{ md: "row", sm: "column" }}
       >
-        <NextLink href="/admin/banOverview">
-          <Link>
-            <Button colorScheme="teal">Správa zabanovaných uživatelů</Button>
-          </Link>
-        </NextLink>
-        {data?.me?.role !== "owner" ? null : (
+        {data?.me?.role !== "owner" ? (
+          <NextLink href="/admin/banOverview">
+            <Link>
+              <Button colorScheme="teal">Správa zabanovaných uživatelů</Button>
+            </Link>
+          </NextLink>
+        ) : (
           <NextLink href="/admin/userOverview">
             <Link mt={{ md: 0, sm: 4 }}>
               <Button colorScheme="teal">Správa uživatelů</Button>
@@ -44,4 +44,4 @@ export const Admin: React.FC = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Admin);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Admin);

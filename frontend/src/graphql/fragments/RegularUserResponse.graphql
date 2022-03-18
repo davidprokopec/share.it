@@ -1,4 +1,4 @@
-fragment RegularUserReponse on UserResponse {
+fragment RegularUserResponse on UserResponse {
   errors {
     ...RegularError
   }

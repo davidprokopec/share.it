@@ -1,44 +1,32 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  Text,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
-import { Form, Formik } from "formik";
+import { Badge, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
 import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React from "react";
 import { BanPopover } from "../../components/BanPopover";
-import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
+import { Loading } from "../../components/Loading";
 import { SetAdminPopover } from "../../components/SetAdminPopover";
-import {
-  useAdminUsersQuery,
-  useSetAdminUserMutation,
-  useUsersQuery,
-} from "../../generated/graphql";
+import { useUsersQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useIsBanned } from "../../utils/useIsBanned";
 import { useIsOwner } from "../../utils/useIsOwner";
 
 export const AdminOverview: React.FC = ({}) => {
-  useIsBanned();
   useIsOwner();
-  const [{ data }] = useUsersQuery();
+  const [{ data, fetching }] = useUsersQuery();
+
+  if (fetching) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
+
+  if (!data) {
+    return <Layout>ERROR</Layout>;
+  }
 
   return (
     <Layout>
@@ -81,13 +69,6 @@ export const AdminOverview: React.FC = ({}) => {
                   flexDirection={{ md: "row", sm: "column" }}
                 >
                   <Flex flexDirection="column">
-                    <Flex
-                      flexDirection="row"
-                      mb={1}
-                      alignItems="center"
-                      left="-1"
-                      pos="relative"
-                    ></Flex>
                     <NextLink
                       href="/user/[username]"
                       as={`/user/${u.username}`}
@@ -134,7 +115,17 @@ export const AdminOverview: React.FC = ({}) => {
                     mt={{ md: 0, sm: 4 }}
                   >
                     <Flex flexDirection="column">
-                      <Badge ml={1} fontSize="1.2em" colorScheme="green">
+                      <Badge
+                        ml={1}
+                        fontSize="1.2em"
+                        colorScheme={
+                          u.role === "user"
+                            ? "cyan"
+                            : u.role !== "owner"
+                            ? "green"
+                            : "red"
+                        }
+                      >
                         {u.role}
                       </Badge>
                       <SetAdminPopover user={u} />
@@ -154,4 +145,4 @@ export const AdminOverview: React.FC = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(AdminOverview);
+export default withUrqlClient(createUrqlClient, { ssr: false })(AdminOverview);

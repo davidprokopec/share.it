@@ -63,7 +63,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             <Box pos="absolute" top="5">
               <NextLink href="/admin/">
                 <Link color="blue.100" fontSize="0.7rem">
-                  admin
+                  {data.me.role}
                 </Link>
               </NextLink>
             </Box>

@@ -1,9 +1,9 @@
-import { Flex, Box, Link, Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, Link, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
 import React from "react";
 import { PostSnippetFragment } from "../generated/graphql";
 import { EditDeletePostButtons } from "./EditDeletePostButtons";
 import { VoteSection } from "./VoteSection";
-import NextLink from "next/link";
 
 interface PostCardProps {
   post: PostSnippetFragment;
@@ -19,28 +19,34 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
       overflow="hidden"
       bg="#DEE7E7"
       rounded="md"
+      flexDirection="column"
     >
-      <VoteSection post={post} />
-      <Box flex={1}>
-        <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-          <Link>
-            <Heading fontSize="xl">{post.title}</Heading>
-          </Link>
-        </NextLink>
-        <NextLink href="/user/[username]" as={`/user/${post.creator.username}`}>
-          <Link>
-            <Text>Zveřejnil {post.creator.username} </Text>
-          </Link>
-        </NextLink>
-        <Flex align="center">
-          <Text noOfLines={[1, 2]} mt={4} mr={4}>
+      <Flex>
+        <VoteSection post={post} direction="column" />
+        <Flex flexDirection="column" maxW="80vw" w="100%">
+          <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+            <Link>
+              <Heading maxW="70vw" mr={4} fontSize="xl">
+                {post.title}
+              </Heading>
+            </Link>
+          </NextLink>
+          <NextLink
+            href="/user/[username]"
+            as={`/user/${post.creator.username}`}
+          >
+            <Link>
+              <Text>Zveřejnil {post.creator.username} </Text>
+            </Link>
+          </NextLink>
+          <Text noOfLines={3} mt={4} mr={4} maxW="70vw">
             {post.text}
           </Text>
-          <Box ml="auto">
-            <EditDeletePostButtons id={post.id} creatorId={post.creator.id} />
-          </Box>
         </Flex>
-      </Box>
+      </Flex>
+      <Flex mt={2} justifyContent="flex-end" ml="auto" w="100%">
+        <EditDeletePostButtons id={post.id} creatorId={post.creator.id} />
+      </Flex>
     </Flex>
   );
 };

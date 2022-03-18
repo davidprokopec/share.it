@@ -21,9 +21,10 @@ import "moment/locale/cs";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React from "react";
-import { BanButton } from "../../components/BanButton";
+import { BanPopover } from "../../components/BanPopover";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
+import { Loading } from "../../components/Loading";
 import {
   useBannedUsersQuery,
   useBanUserMutation,
@@ -35,7 +36,7 @@ import { useIsBanned } from "../../utils/useIsBanned";
 export const BanOverview: React.FC = ({}) => {
   useIsBanned();
   useIsAdmin();
-  const [{ data }] = useBannedUsersQuery();
+  const [{ data, fetching }] = useBannedUsersQuery();
   const [, banUser] = useBanUserMutation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -49,6 +50,18 @@ export const BanOverview: React.FC = ({}) => {
 
   const duration = 2000;
 
+  if (fetching) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
+
+  if (!data) {
+    return <Layout>ERROR</Layout>;
+  }
+
   return (
     <Layout>
       <NextLink href="/admin">
@@ -58,7 +71,13 @@ export const BanOverview: React.FC = ({}) => {
           </Text>
         </Link>
       </NextLink>
-      <Flex flexDirection="column" rounded="md" bg="gray.100" p={5}>
+      <Flex
+        flexDirection="column"
+        rounded="md"
+        bg="gray.100"
+        p={5}
+        textAlign="center"
+      >
         <Flex
           flexDirection={{ md: "row", sm: "column" }}
           justifyContent="space-between"
@@ -254,25 +273,18 @@ export const BanOverview: React.FC = ({}) => {
                   bg="#DEE7E7"
                   rounded="md"
                   alignItems="center"
+                  justifyContent="space-between"
+                  flexDirection={{ md: "row", sm: "column" }}
                 >
                   <Flex flexDirection="column">
-                    <Flex
-                      flexDirection="row"
-                      mb={1}
-                      alignItems="center"
-                      left="-1"
-                      pos="relative"
-                    >
-                      <Badge colorScheme={u.banned ? "red" : "green"}>
-                        {u.banned ? "zabanovaný" : "nezabanovaný"}
-                      </Badge>
-                    </Flex>
                     <NextLink
                       href="/user/[username]"
                       as={`/user/${u.username}`}
                     >
                       <Link>
-                        <Text color="blue.600">Profil</Text>
+                        <Text color="blue.600" textAlign="left">
+                          Profil
+                        </Text>
                       </Link>
                     </NextLink>
                     <Flex flexDirection="row" mb={1}>
@@ -306,7 +318,12 @@ export const BanOverview: React.FC = ({}) => {
                       </Text>
                     </Flex>
                   </Flex>
-                  <BanButton user={u} />
+                  <Flex flexDirection="column">
+                    <Badge mb={1} colorScheme={u.banned ? "red" : "green"}>
+                      {u.banned ? "zabanovaný" : "nezabanovaný"}
+                    </Badge>
+                    <BanPopover user={u} />
+                  </Flex>
                 </Flex>
               )
             )}
@@ -317,4 +334,4 @@ export const BanOverview: React.FC = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(BanOverview);
+export default withUrqlClient(createUrqlClient, { ssr: false })(BanOverview);

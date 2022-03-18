@@ -1,11 +1,22 @@
 import { UsernamePasswordInput } from "src/resolvers/UsernamePasswordInput";
 
 export const validateRegister = (options: UsernamePasswordInput) => {
+  const pattern = /^[a-zA-Z]*$/;
+
+  if (!pattern.test(options.username)) {
+    return [
+      {
+        field: "username",
+        message: "Uživatelské jméno může obsahovat pouze písmena a-Z",
+      },
+    ];
+  }
+
   if (!options.email.includes("@")) {
     return [
       {
         field: "email",
-        message: "Invalid email",
+        message: "Nesprávný e-mail",
       },
     ];
   }
@@ -18,7 +29,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
       },
       {
         field: "passwordVerify",
-        message: "Passwords don't match.",
+        message: "Hesla se neshodují",
       },
     ];
   }
@@ -27,16 +38,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "username",
-        message: "Username must be longer than 2 characters",
-      },
-    ];
-  }
-
-  if (options.username.includes("@")) {
-    return [
-      {
-        field: "username",
-        message: "Username cannot include an @",
+        message: "Uživatelské jméno musí být delší než 2 znaky",
       },
     ];
   }
@@ -45,7 +47,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "password",
-        message: "Password must be longer than 4 characters",
+        message: "Heslo musí být delší než 2 znaky",
       },
     ];
   }

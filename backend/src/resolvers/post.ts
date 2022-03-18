@@ -19,6 +19,7 @@ import { getConnection } from "typeorm";
 import { Upvote } from "../entities/Upvote";
 import { User } from "../entities/User";
 import { stringify } from "querystring";
+import { FieldError } from "../entities/FieldError";
 
 @InputType()
 class PostInput {
@@ -26,6 +27,13 @@ class PostInput {
   title: string;
   @Field()
   text: string;
+}
+@ObjectType()
+class CreatePostResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+  @Field(() => Post, { nullable: true })
+  post?: Post;
 }
 
 @ObjectType()
@@ -165,16 +173,29 @@ export class PostResolver {
     return Post.findOne(id);
   }
 
-  @Mutation(() => Post)
+  @Mutation(() => CreatePostResponse)
   @UseMiddleware(isAuth)
   async createPost(
     @Arg("input") input: PostInput,
     @Ctx() { req }: MyContext
-  ): Promise<Post> {
-    return Post.create({
+  ): Promise<CreatePostResponse> {
+    if (input.title.length > 20) {
+      return {
+        errors: [
+          {
+            field: "title",
+            message: "Název nesmí být delší než 20 znaků",
+          },
+        ],
+      };
+    }
+
+    const post = await Post.create({
       ...input,
       creatorId: req.session.userId,
     }).save();
+
+    return { post };
   }
 
   @Mutation(() => Post, { nullable: true })

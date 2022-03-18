@@ -20,7 +20,7 @@ export async function sendEmail(to: string, html: string) {
   let info = await transporter.sendMail({
     from: '"Share.it Admin" <admin@davidprokopec.me>', // sender address
     to: to,
-    subject: "Change password", // Subject line
+    subject: "Změna hesla", // Subject
     html,
   });
 
