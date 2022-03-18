@@ -40,7 +40,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     body = (
       <Flex align="center">
-        <NextLink href="create-post">
+        <NextLink href="/create-post">
           <Button
             as={Link}
             mr={{ md: 2, sm: 0.3 }}
@@ -49,7 +49,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             Vytvořit příspěvek
           </Button>
         </NextLink>
-        <Flex mr={2} alignItems="center" justifyContent="center" pos="relative">
+        <Flex
+          mr={2}
+          alignItems="center"
+          justifyContent="center"
+          fontSize={{ md: "1em", sm: "0.8em" }}
+          pos="relative"
+        >
           <NextLink href="/user/[username]" as={`/user/${data.me.username}`}>
             <Link>{data.me.username}</Link>
           </NextLink>
@@ -79,8 +85,18 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4}>
+    <Flex
+      zIndex={1}
+      position="sticky"
+      top={0}
+      bg="#4F646F"
+      p={4}
+      w={{ md: "100%", sm: "100vw" }}
+      overflow="hidden"
+    >
       <Flex
+        ml="auto"
+        mr="auto"
         w="100%"
         maxW="100vw"
         alignItems="center"
@@ -115,7 +131,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <Formik
             initialValues={{ query: searchQuery }}
             onSubmit={(values, { setSubmitting }) => {
-              router.push(
+              router.replace(
                 "/search/[searchQuery]",
                 (`/search/` + values.query) as string
               );

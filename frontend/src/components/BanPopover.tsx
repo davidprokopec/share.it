@@ -8,22 +8,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import {
-  RegularUserFragment,
-  useSetAdminUserMutation,
-} from "../generated/graphql";
+import { RegularUserFragment, useBanUserMutation } from "../generated/graphql";
 
-interface SetAdminPopoverProps {
+interface BanPopoverProps {
   user: RegularUserFragment;
 }
 
-export const SetAdminPopover: React.FC<SetAdminPopoverProps> = ({ user }) => {
-  const [, setAdminUser] = useSetAdminUserMutation();
+export const BanPopover: React.FC<BanPopoverProps> = ({ user }) => {
+  const [, banUser] = useBanUserMutation();
 
   const toast = useToast();
 
-  const color = user.role === "admin" ? "red" : "green";
-  const note = user.role === "admin" ? "Odebrat práva" : "Udělit práva";
+  const color = user.banned ? "green" : "red";
+  const note = user.banned ? "Odbanovat" : "Zabanovat";
   const duration = 2000;
 
   return user.role === "owner" ? null : (
@@ -41,12 +38,12 @@ export const SetAdminPopover: React.FC<SetAdminPopoverProps> = ({ user }) => {
             <Button
               colorScheme={color}
               onClick={async () => {
-                const action = user.role === "admin" ? "remove" : "add";
-                const response = await setAdminUser({
+                const action = user.banned ? "unban" : "ban";
+                const response = await banUser({
                   username: user.username,
                   action,
                 });
-                const status = response.data?.setAdminUser.status as
+                const status = response.data?.banUser.status as
                   | "info"
                   | "warning"
                   | "success"
@@ -56,37 +53,40 @@ export const SetAdminPopover: React.FC<SetAdminPopoverProps> = ({ user }) => {
                   toast({
                     title: "Něco se nepodařilo",
                     description:
-                      action === "remove"
-                        ? "Při odebíraní práv se něco nezdařilo."
-                        : "Při přidělování práv se něco nezdařilo.",
+                      action === "ban"
+                        ? "Při banování se něco nezdařilo."
+                        : "Při odbanování se něco nezdařilo.",
                     status: "error",
                     duration,
                     isClosable: true,
                   });
                 }
-                if (response.data?.setAdminUser.error) {
+                if (response.data?.banUser.error) {
                   toast({
                     title:
-                      action === "remove"
-                        ? "Účtu nebyla odebrána práva."
-                        : "Účtu nebyla přidělena práva.",
+                      action === "unban"
+                        ? "Účet nebyl odbanován"
+                        : "Účet nebyl zabanován",
 
-                    description: response.data.setAdminUser.error,
+                    description: response.data.banUser.error,
                     status,
                     duration,
                     isClosable: true,
                   });
                 } else {
                   toast({
-                    title: "Účtu byla odebrána práva.",
+                    title:
+                      action === "unban"
+                        ? "Účet byl úspěšně odbanován"
+                        : "Účet byl úspěšně zabanován",
                     description:
-                      action === "remove"
-                        ? "Uživateli " +
-                          response.data?.setAdminUser.user?.username +
-                          " byla odebrána práva."
-                        : "Uživateli " +
-                          response.data?.setAdminUser.user?.username +
-                          " byla přidělena práva.",
+                      action === "ban"
+                        ? "Uživatel " +
+                          response.data?.banUser.user?.username +
+                          " byl zabanován."
+                        : "Uživatel " +
+                          response.data?.banUser.user?.username +
+                          " byl odbanován.",
                     status,
                     duration,
                     isClosable: true,

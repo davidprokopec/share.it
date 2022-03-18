@@ -33,9 +33,9 @@ export const Admin: React.FC = ({}) => {
           </Link>
         </NextLink>
         {data?.me?.role !== "owner" ? null : (
-          <NextLink href="/admin/adminOverview">
+          <NextLink href="/admin/userOverview">
             <Link mt={{ md: 0, sm: 4 }}>
-              <Button colorScheme="teal">Správa administrátorů</Button>
+              <Button colorScheme="teal">Správa uživatelů</Button>
             </Link>
           </NextLink>
         )}

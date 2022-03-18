@@ -22,7 +22,8 @@ const theme = extendTheme({
       body: {
         minWidth: "min-content",
         bg: "gray.300",
-        overflow: "hidden",
+        maxWidth: "100vw",
+        overflow: "scroll",
       },
     }),
   },

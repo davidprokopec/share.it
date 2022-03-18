@@ -436,4 +436,9 @@ export class UserResolver {
   async adminUsers(): Promise<User[] | undefined> {
     return await User.find({ where: [{ role: "admin" }, { role: "owner" }] });
   }
+
+  @Query(() => [User])
+  async users(): Promise<User[] | undefined> {
+    return await (await User.find()).reverse();
+  }
 }

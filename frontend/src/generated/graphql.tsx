@@ -176,6 +176,7 @@ export type Query = {
   posts: PaginatedPosts;
   searchPosts: Array<Post>;
   user: User;
+  users: Array<User>;
 };
 
 
@@ -390,6 +391,11 @@ export type UserQueryVariables = Exact<{
 
 
 export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', createdAt: string, id: number, username: string, email: string, role: string, banned: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string }> };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -700,4 +706,15 @@ ${PostSnippetFragmentDoc}`;
 
 export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<UserQuery>({ query: UserDocument, ...options });
+};
+export const UsersDocument = gql`
+    query Users {
+  users {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+export function useUsersQuery(options: Omit<Urql.UseQueryArgs<UsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<UsersQuery>({ query: UsersDocument, ...options });
 };
