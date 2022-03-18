@@ -25,6 +25,7 @@ export const Admin: React.FC = ({}) => {
         p={5}
         justifyContent={data?.me?.role === "owner" ? "space-around" : "center"}
         alignItems="center"
+        flexDirection={{ md: "row", sm: "column" }}
       >
         <NextLink href="/admin/banOverview">
           <Link>
@@ -33,7 +34,7 @@ export const Admin: React.FC = ({}) => {
         </NextLink>
         {data?.me?.role !== "owner" ? null : (
           <NextLink href="/admin/adminOverview">
-            <Link>
+            <Link mt={{ md: 0, sm: 4 }}>
               <Button colorScheme="teal">Správa administrátorů</Button>
             </Link>
           </NextLink>

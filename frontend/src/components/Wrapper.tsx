@@ -15,10 +15,10 @@ export const Wrapper: React.FC<WrapperProps> = ({
     <Box
       mt={8}
       mx="auto"
-      maxW={variant === "regular" ? "80vw" : "40vw"}
+      maxW={variant === "regular" ? "90vw" : "70vw"}
       w="100%"
     >
-      <Box mx={2}>{children}</Box>
+      <Box mx={1}>{children}</Box>
     </Box>
   );
 };

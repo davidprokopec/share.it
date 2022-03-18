@@ -56,7 +56,7 @@ export const AdminOverview: React.FC = ({}) => {
       </NextLink>
       <Flex flexDirection="column" rounded="md" bg="gray.100" p={5}>
         <Flex
-          flexDirection="row"
+          flexDirection={{ md: "row", sm: "column" }}
           justifyContent="space-between"
           alignItems="center"
           mb={15}
@@ -69,7 +69,7 @@ export const AdminOverview: React.FC = ({}) => {
 
             <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
-              <ModalContent display="aboslute" w="1000000px" z-index={9}>
+              <ModalContent>
                 <ModalHeader>Přidat práva uživateli</ModalHeader>
                 <ModalCloseButton />
                 <Formik
@@ -160,6 +160,7 @@ export const AdminOverview: React.FC = ({}) => {
                   rounded="md"
                   alignItems="center"
                   justifyContent="space-between"
+                  flexDirection={{ md: "row", sm: "column" }}
                 >
                   <Flex flexDirection="column">
                     <Flex
@@ -213,7 +214,8 @@ export const AdminOverview: React.FC = ({}) => {
                     justifyContent="center"
                     maxW="200px"
                     w="100%"
-                    mr={-7}
+                    mr={{ md: -7, sm: 0 }}
+                    mt={{ md: 0, sm: 4 }}
                   >
                     <Box>
                       <Badge ml={1} fontSize="1.2em" colorScheme="green">

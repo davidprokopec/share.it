@@ -11,6 +11,8 @@ export const BanButton: React.FC<BanButtonProps> = ({ user }) => {
   return (
     <Button
       ml="auto"
+      mr={{ md: 0, sm: "auto" }}
+      mt={{ md: 0, sm: 4 }}
       colorScheme={user.banned ? "green" : "red"}
       onClick={() => {
         const action = user.banned ? "unban" : "ban";

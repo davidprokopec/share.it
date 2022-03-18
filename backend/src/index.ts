@@ -30,11 +30,11 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
-    // synchronize: true,
+    synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Upvote, Comment],
   });
-  await conn.runMigrations();
+  // await conn.runMigrations();
 
   if (__prod__) {
     createOwnerUser();

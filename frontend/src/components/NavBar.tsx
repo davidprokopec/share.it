@@ -41,7 +41,11 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <Flex align="center">
         <NextLink href="create-post">
-          <Button as={Link} mr={2}>
+          <Button
+            as={Link}
+            mr={{ md: 2, sm: 0.3 }}
+            transform={{ md: "scale(1)", sm: "scale(0.8)" }}
+          >
             Vytvořit příspěvek
           </Button>
         </NextLink>
@@ -60,6 +64,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           )}
         </Flex>
         <Button
+          transform={{ md: "scale(1)", sm: "scale(0.8)" }}
           onClick={async () => {
             await logout();
             router.reload();
@@ -74,10 +79,17 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4} w="100vw">
-      <Flex flex={1} m="auto" maxW="100vw" w="100vw" alignItems="center">
+    <Flex zIndex={1} position="sticky" top={0} bg="#4F646F" p={4}>
+      <Flex
+        w="100%"
+        maxW="100vw"
+        alignItems="center"
+        flexDirection={{ md: "row", sm: "column" }}
+        justifyContent={{ md: "space-evenly", sm: "center" }}
+        textAlign="center"
+      >
         <NextLink href="/">
-          <Link style={{ textDecoration: "none", marginRight: "auto" }}>
+          <Link style={{ textDecoration: "none" }}>
             <Heading
               color="gray.100"
               transition="0.5s"
@@ -86,40 +98,55 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                 transition: "0.5s",
                 textDecoration: "none",
               }}
+              ml={{ md: 0, sm: "auto" }}
+              mr={{ md: 5, sm: "auto" }}
+              mb={{ md: 0, sm: 2 }}
             >
               Share.it
             </Heading>
           </Link>
         </NextLink>
-        <Formik
-          initialValues={{ query: searchQuery }}
-          onSubmit={(values, { setSubmitting }) => {
-            router.push(
-              "/search/[searchQuery]",
-              (`/search/` + values.query) as string
-            );
-            setSubmitting(false);
-          }}
+        <Flex
+          flexDirection="row"
+          ml="auto"
+          mr={{ md: 0, sm: "auto" }}
+          mb={{ md: 0, sm: 4 }}
         >
-          {({ isSubmitting }) => (
-            <Form>
-              <Flex flexDirection="row" mr={2} role="group">
-                <Box mr={4}>
-                  <InputField name="query" placeholder="zadejte hledaný text" />
-                </Box>
-                <Button
-                  type="submit"
-                  isLoading={isSubmitting}
-                  bg="whiteAlpha.500"
-                  fontSize={[12, 15]}
-                >
-                  Hledat
-                </Button>
-              </Flex>
-            </Form>
-          )}
-        </Formik>
-        <Box ml={"auto"}>{body}</Box>
+          <Formik
+            initialValues={{ query: searchQuery }}
+            onSubmit={(values, { setSubmitting }) => {
+              router.push(
+                "/search/[searchQuery]",
+                (`/search/` + values.query) as string
+              );
+              setSubmitting(false);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Flex flex-direction="row">
+                  <Box mr={4}>
+                    <InputField
+                      name="query"
+                      placeholder="zadejte hledaný text"
+                    />
+                  </Box>
+                  <Button
+                    type="submit"
+                    isLoading={isSubmitting}
+                    bg="whiteAlpha.500"
+                    fontSize={[12, 15]}
+                  >
+                    Hledat
+                  </Button>
+                </Flex>
+              </Form>
+            )}
+          </Formik>
+        </Flex>
+        <Box mr={{ md: 0, sm: "auto" }} ml={"auto"}>
+          {body}
+        </Box>
       </Flex>
     </Flex>
   );

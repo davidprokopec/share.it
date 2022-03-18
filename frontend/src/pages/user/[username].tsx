@@ -53,11 +53,16 @@ export const User: React.FC = ({}) => {
         <Text fontWeight="bold" fontSize={20} textAlign="center">
           {data.user.username}
         </Text>
-        <Flex flexDirection="row">
-          <Text color="gray.500">Zaregistrován: </Text>
-          <Text ml={3}>
-            {moment(new Date(parseInt(data.user.createdAt))).format("LLLL")}
-          </Text>
+        <Flex
+          flexDirection={{ md: "row", sm: "column" }}
+          justifyContent="center"
+        >
+          <Flex flexDirection="row">
+            <Text color="gray.500">Zaregistrován: </Text>
+            <Text ml={3}>
+              {moment(new Date(parseInt(data.user.createdAt))).format("LLLL")}
+            </Text>
+          </Flex>
           {meData?.me?.role !== "admin" &&
           meData?.me?.role !== "owner" ? null : (
             <BanButton user={data.user} />

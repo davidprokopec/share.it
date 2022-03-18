@@ -60,13 +60,13 @@ export const BanOverview: React.FC = ({}) => {
       </NextLink>
       <Flex flexDirection="column" rounded="md" bg="gray.100" p={5}>
         <Flex
-          flexDirection="row"
+          flexDirection={{ md: "row", sm: "column" }}
           justifyContent="space-between"
           alignItems="center"
           mb={15}
         >
           <Text color="gray.700">Zabanovaní uživatelé</Text>
-          <Flex>
+          <Flex flexDirection={{ md: "row", sm: "column" }} alignItems="center">
             <Button colorScheme="red" onClick={onOpen}>
               Zabanovat uživatele
             </Button>
@@ -148,7 +148,12 @@ export const BanOverview: React.FC = ({}) => {
                 </Formik>
               </ModalContent>
             </Modal>
-            <Button ml={4} colorScheme="green" onClick={onOpenUnban}>
+            <Button
+              ml={{ md: 4, sm: 0 }}
+              mt={{ md: 0, sm: 2 }}
+              colorScheme="green"
+              onClick={onOpenUnban}
+            >
               Odbanovat uživatele
             </Button>
 
