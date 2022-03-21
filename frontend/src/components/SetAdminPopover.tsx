@@ -78,7 +78,10 @@ export const SetAdminPopover: React.FC<SetAdminPopoverProps> = ({ user }) => {
                   });
                 } else {
                   toast({
-                    title: "Účtu byla odebrána práva.",
+                    title:
+                      action === "remove"
+                        ? "Uživateli byla odebrána práva."
+                        : "Uživateli byla přidělena práva",
                     description:
                       action === "remove"
                         ? "Uživateli " +

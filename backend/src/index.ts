@@ -77,6 +77,7 @@ const main = async () => {
   );
 
   const apolloServer = new ApolloServer({
+    introspection: true,
     plugins: [
       ApolloServerPluginLandingPageGraphQLPlayground({
         // options

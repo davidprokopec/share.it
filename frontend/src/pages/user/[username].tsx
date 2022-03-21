@@ -90,4 +90,4 @@ export const User: React.FC = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(User);
+export default withUrqlClient(createUrqlClient, { ssr: false })(User);

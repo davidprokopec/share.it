@@ -24,4 +24,4 @@ const SearchError = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(SearchError);
+export default withUrqlClient(createUrqlClient, { ssr: false })(SearchError);

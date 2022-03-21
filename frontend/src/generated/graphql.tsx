@@ -172,7 +172,6 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
-  adminUsers: Array<User>;
   bannedUsers: Array<User>;
   comment: Comment;
   comments?: Maybe<Comments>;
@@ -339,7 +338,7 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, title: string, text: string, textSnippet: string } | null | undefined };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, title: string, text: string } | null | undefined };
 
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -348,11 +347,6 @@ export type VoteMutationVariables = Exact<{
 
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
-
-export type AdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AdminUsersQuery = { __typename?: 'Query', adminUsers: Array<{ __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string }> };
 
 export type BannedUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -398,7 +392,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', createdAt: string, id: number, username: string, email: string, role: string, banned: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, text: string, voteStatus?: number | null | undefined, creator: { __typename?: 'User', id: number, username: string, role: string } }> } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -605,7 +599,6 @@ export const UpdatePostDocument = gql`
     id
     title
     text
-    textSnippet
   }
 }
     `;
@@ -621,17 +614,6 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
-};
-export const AdminUsersDocument = gql`
-    query AdminUsers {
-  adminUsers {
-    ...RegularUser
-  }
-}
-    ${RegularUserFragmentDoc}`;
-
-export function useAdminUsersQuery(options: Omit<Urql.UseQueryArgs<AdminUsersQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<AdminUsersQuery>({ query: AdminUsersDocument, ...options });
 };
 export const BannedUsersDocument = gql`
     query BannedUsers {
@@ -708,7 +690,6 @@ export const UserDocument = gql`
     query User($username: String!) {
   user(username: $username) {
     ...RegularUser
-    createdAt
     posts {
       ...PostSnippet
     }
