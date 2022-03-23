@@ -1,3 +1,4 @@
 dat.sh
 */.env
 .vscode/
+*/.env.production
