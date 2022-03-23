@@ -20,7 +20,7 @@ import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
 import { getConnection } from "typeorm";
-import { FieldError } from "../entities/FieldError";
+import { FieldError } from "./FieldError";
 import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()

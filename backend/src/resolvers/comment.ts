@@ -14,7 +14,7 @@ import {
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
 import { User } from "../entities/User";
-import { FieldError } from "../entities/FieldError";
+import { FieldError } from "./FieldError";
 
 @InputType()
 class CommentInput {
@@ -100,7 +100,11 @@ export class CommentResolver {
     if (!comment) {
       return false;
     }
-    if (user?.role !== "admin" && comment.userId !== req.session.userId) {
+    if (
+      user?.role !== "admin" &&
+      user?.role !== "owner" &&
+      comment.userId !== req.session.userId
+    ) {
       throw new Error("not authorized");
     }
 

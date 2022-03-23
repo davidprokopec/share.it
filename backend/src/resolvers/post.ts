@@ -19,7 +19,7 @@ import { getConnection } from "typeorm";
 import { Upvote } from "../entities/Upvote";
 import { User } from "../entities/User";
 import { stringify } from "querystring";
-import { FieldError } from "../entities/FieldError";
+import { FieldError } from "./FieldError";
 
 @InputType()
 class PostInput {

@@ -47,7 +47,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     return [
       {
         field: "password",
-        message: "Heslo musí být delší než 2 znaky",
+        message: "Heslo musí být delší než 4 znaky",
       },
     ];
   }
