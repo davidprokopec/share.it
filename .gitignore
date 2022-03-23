@@ -2,3 +2,4 @@ dat.sh
 */.env
 .vscode/
 */.env.production
+*/backup.env

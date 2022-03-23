@@ -4,12 +4,14 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
   UseMiddleware,
 } from "type-graphql";
 import { isAuth } from "../middleware/isAuth";
@@ -40,6 +42,11 @@ class Comments {
 
 @Resolver(Comment)
 export class CommentResolver {
+  @FieldResolver(() => User)
+  creator(@Root() comment: Comment, @Ctx() { userLoader }: MyContext) {
+    return userLoader.load(comment.userId);
+  }
+
   @Query(() => Comment)
   comment(@Arg("id", () => Int) id: number): Promise<Comment | undefined> {
     return Comment.findOne(id, {
