@@ -168,6 +168,11 @@ export class PostResolver {
     };
   }
 
+  @Query(() => [Post])
+  async bestPosts(): Promise<Post[]> {
+    return Post.find({ order: { points: "DESC" } });
+  }
+
   @Query(() => Post, { nullable: true })
   post(@Arg("id", () => Int) id: number): Promise<Post | undefined> {
     return Post.findOne(id);
