@@ -36,9 +36,7 @@ const main = async () => {
   });
   // await conn.runMigrations();
 
-  if (__prod__) {
-    createOwnerUser();
-  }
+  // createOwnerUser();
 
   // Post.delete({});
 

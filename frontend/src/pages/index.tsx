@@ -1,4 +1,4 @@
-import { Button, Flex, Stack } from "@chakra-ui/react";
+import { Button, Flex, Link, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useState } from "react";
 import { Layout } from "../components/Layout";
@@ -6,6 +6,7 @@ import { Loading } from "../components/Loading";
 import { PostCard } from "../components/PostCard";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import NextLink from "next/link";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -27,6 +28,18 @@ const Index = () => {
 
   return (
     <Layout>
+      <Flex justifyContent="space-around" pb="20px" mt="-20px">
+        <NextLink href="/faq">
+          <Link fontWeight="bold" color="#4F646F">
+            FAQ
+          </Link>
+        </NextLink>
+        <NextLink href="/topPosts">
+          <Link fontWeight="bold" color="#4F646F">
+            NEJLEPŠÍ PŘÍSPĚVKY
+          </Link>
+        </NextLink>
+      </Flex>
       {!data && fetching ? (
         <Loading />
       ) : (

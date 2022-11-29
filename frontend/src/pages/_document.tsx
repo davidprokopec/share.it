@@ -4,8 +4,6 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <title>Share.it</title>
-        <meta name="viewport" content="width=320, initial-scale=1"></meta>
         <link
           rel="apple-touch-icon"
           sizes="180x180"

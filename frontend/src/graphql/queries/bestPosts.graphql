@@ -1,0 +1,11 @@
+query BestPosts {
+  bestPosts {
+    id
+    title
+    points
+    creator {
+      id
+      username
+    }
+  }
+}
