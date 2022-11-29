@@ -99,6 +99,7 @@ function invalidateAllPosts(cache: Cache) {
   cache.invalidate("Query", "posts", {
     limit: 15,
   });
+  cache.invalidate("Query", "bestPosts", {});
 }
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
@@ -191,6 +192,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   { id: postId, points: newPoints, voteStatus: value }
                 );
               }
+              cache.invalidate("Query", "bestPosts", {});
             },
             createPost: (_result, args, cache, info) => {
               invalidateAllPosts(cache);

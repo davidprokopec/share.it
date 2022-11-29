@@ -33,6 +33,8 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAdmin } from "../../utils/useIsAdmin";
 import { useIsBanned } from "../../utils/useIsBanned";
 
+type Status = "info" | "warning" | "success" | "error" | undefined;
+
 export const BanOverview: React.FC = ({}) => {
   useIsBanned();
   useIsAdmin();
@@ -102,12 +104,8 @@ export const BanOverview: React.FC = ({}) => {
                       username: values.username,
                       action: "ban",
                     });
-                    const status = response.data?.banUser.status as
-                      | "info"
-                      | "warning"
-                      | "success"
-                      | "error"
-                      | undefined;
+
+                    const status = response.data?.banUser.status as Status;
                     if (!response.data) {
                       toast({
                         title: "Něco se nepodařilo",
@@ -192,12 +190,7 @@ export const BanOverview: React.FC = ({}) => {
                       username: values.username,
                       action: "unban",
                     });
-                    const status = response.data?.banUser.status as
-                      | "info"
-                      | "warning"
-                      | "success"
-                      | "error"
-                      | undefined;
+                    const status = response.data?.banUser.status as Status;
                     if (!response.data) {
                       toast({
                         title: "Něco se nepodařilo",

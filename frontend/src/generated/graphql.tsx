@@ -30,6 +30,7 @@ export type BanAdminResponse = {
 export type Comment = {
   __typename?: 'Comment';
   createdAt: Scalars['String'];
+  creator: User;
   id: Scalars['Float'];
   post: Post;
   postId: Scalars['Float'];
@@ -173,6 +174,7 @@ export type PostInput = {
 export type Query = {
   __typename?: 'Query';
   bannedUsers: Array<User>;
+  bestPosts: Array<Post>;
   comment: Comment;
   comments?: Maybe<Comments>;
   hello: Scalars['String'];
@@ -352,6 +354,11 @@ export type BannedUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type BannedUsersQuery = { __typename?: 'Query', bannedUsers: Array<{ __typename?: 'User', id: number, username: string, email: string, role: string, banned: boolean, createdAt: string }> };
+
+export type BestPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BestPostsQuery = { __typename?: 'Query', bestPosts: Array<{ __typename?: 'Post', id: number, title: string, points: number, creator: { __typename?: 'User', id: number, username: string } }> };
 
 export type CommentsQueryVariables = Exact<{
   postId: Scalars['Int'];
@@ -625,6 +632,23 @@ export const BannedUsersDocument = gql`
 
 export function useBannedUsersQuery(options: Omit<Urql.UseQueryArgs<BannedUsersQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<BannedUsersQuery>({ query: BannedUsersDocument, ...options });
+};
+export const BestPostsDocument = gql`
+    query BestPosts {
+  bestPosts {
+    id
+    title
+    points
+    creator {
+      id
+      username
+    }
+  }
+}
+    `;
+
+export function useBestPostsQuery(options: Omit<Urql.UseQueryArgs<BestPostsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<BestPostsQuery>({ query: BestPostsDocument, ...options });
 };
 export const CommentsDocument = gql`
     query Comments($postId: Int!) {

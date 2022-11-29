@@ -170,7 +170,18 @@ export class PostResolver {
 
   @Query(() => [Post])
   async bestPosts(): Promise<Post[]> {
-    return Post.find({ order: { points: "DESC" } });
+    // return Post.find({ order: { points: "DESC" } });
+
+    const posts = await getConnection().query(
+      `
+  select p.*
+  from post p
+  order by p.points DESC
+  `
+    );
+
+    console.log("posts", posts[0]);
+    return posts;
   }
 
   @Query(() => Post, { nullable: true })

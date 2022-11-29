@@ -432,6 +432,6 @@ export class UserResolver {
 
   @Query(() => [User])
   async users(): Promise<User[] | undefined> {
-    return await await User.find({ order: { id: "ASC" } });
+    return await User.find({ order: { id: "ASC" } });
   }
 }
