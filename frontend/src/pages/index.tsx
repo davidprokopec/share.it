@@ -67,9 +67,11 @@ const Index = () => {
         </Flex>
       ) : null}
 
-      <Text my={2} textAlign="center" color="gray.500">
-        Semestrální projekt UHK 2022
-      </Text>
+      <footer>
+        <Text my={2} textAlign="center" color="gray.500">
+          Semestrální projekt UHK 2022
+        </Text>
+      </footer>
     </Layout>
   );
 };
