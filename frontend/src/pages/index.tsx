@@ -1,4 +1,4 @@
-import { Button, Flex, Link, Stack } from "@chakra-ui/react";
+import { Button, Flex, Link, Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useState } from "react";
 import { Layout } from "../components/Layout";
@@ -66,6 +66,10 @@ const Index = () => {
           </Button>
         </Flex>
       ) : null}
+
+      <Text my={2} textAlign="center" color="gray.500">
+        Semestrální projekt UHK 2022
+      </Text>
     </Layout>
   );
 };
